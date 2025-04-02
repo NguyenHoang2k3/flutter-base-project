@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../base/base_page.dart';
 import '../../../resources/colors.dart';
+import '../notification/notification_page.dart';
 import 'home_bloc.dart';
 
 @RoutePage()
@@ -157,154 +158,97 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
         onTap: (index) {},
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: SizedBox(
-                height: 56,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //Image.asset('assets/images/Vector.png'),
-                    Image.asset(
-                      'assets/images/logo.png',
-                      width: 99,
-                      height: 33,
-                    ),
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(6),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 6,
-                        offset: Offset(2, 2),
+        child: DefaultTabController(
+          length: categories.length,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
+                child: SizedBox(
+                  height: 56,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //Image.asset('assets/images/Vector.png'),
+                      Image.asset(
+                        'assets/images/logo.png',
+                        width: 99,
+                        height: 33,
                       ),
-                    ],
-                  ),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      'assets/images/IconNotification.svg',
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => NotificationPage()),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(6), // Hiệu ứng ripple bo tròn
+                    child: Container(
                       width: 32,
                       height: 32,
-                    ),
-                  ),
-                ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 16),
-            SizedBox(
-              height: 48,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    hintStyle: TextStyle(color: Colors.grey[500]),
-                    prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.tune, color: Colors.grey),
-                      onPressed: () {},
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: Colors.grey.shade400),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              child: SizedBox(
-                height: 24,
-                child: Row(
-                  children: [
-                    Text(
-                      'Trending',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 6,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/images/IconNotification.svg',
+                          width: 32,
+                          height: 32,
+                        ),
                       ),
                     ),
-                    Spacer(),
-                    Text(
-                      'See all',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 14,
-                        fontFamily: 'Poppins',
-                        color: AppColors.grayScale,
-                      ),
-                    ),
-                  ],
+                  ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(32, 0, 32, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/images/landscape.png'),
-                  SizedBox(height: 8),
-                  Text(
-                    'Europe',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.grayScale,
-                      fontFamily: 'Poppins',
+              SizedBox(height: 16),
+              SizedBox(
+                height: 48,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search",
+                      hintStyle: TextStyle(color: Colors.grey[500]),
+                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.tune, color: Colors.grey),
+                        onPressed: () {},
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: Colors.grey.shade400),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Russian warship: Moskva sinks in Black Sea',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 4),
-                  Row(
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                child: SizedBox(
+                  height: 24,
+                  child: Row(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          'assets/images/bbc.png',
-                          width: 20,
-                          height: 20,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
                       Text(
-                        'BBC News',
-                        style: const TextStyle(
-                          fontSize: 13,
+                        'Trending',
+                        style: TextStyle(
                           fontWeight: FontWeight.w700,
-                          fontFamily: 'Poppins',
-                          color: AppColors.grayScale,
+                          fontSize: 16,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Icon(
-                        Icons.access_time,
-                        size: 12,
-                        color: Colors.grey.shade500,
-                      ),
-                      const SizedBox(width: 2),
+                      Spacer(),
                       Text(
-                        '4h ago',
+                        'See all',
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -314,92 +258,185 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-              child: SizedBox(
-                height: 24,
-                child: Row(
+              Padding(
+                padding: const EdgeInsets.fromLTRB(32, 0, 32, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Image.asset('assets/images/landscape.png'),
+                    SizedBox(height: 8),
                     Text(
-                      'Latest',
+                      'Europe',
                       style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Spacer(),
-                    Text(
-                      'See all',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 14,
-                        fontFamily: 'Poppins',
+                        fontSize: 13,
                         color: AppColors.grayScale,
+                        fontFamily: 'Poppins',
                       ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Russian warship: Moskva sinks in Black Sea',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 4),
+                    Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            'assets/images/bbc.png',
+                            width: 20,
+                            height: 20,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'BBC News',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Poppins',
+                            color: AppColors.grayScale,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.access_time,
+                          size: 12,
+                          color: Colors.grey.shade500,
+                        ),
+                        const SizedBox(width: 2),
+                        Text(
+                          '4h ago',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            fontFamily: 'Poppins',
+                            color: AppColors.grayScale,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-              child: SizedBox(
-                height: 30,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  children: [
-                    categoryTab('All', isSelected: true),
-                    categoryTab('Sports'),
-                    categoryTab('Politics'),
-                    categoryTab('Business'),
-                    categoryTab('Health'),
-                    categoryTab('Travel'),
-                    categoryTab('Science'),
-                    categoryTab('Fashion'),
-                  ],
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                child: SizedBox(
+                  height: 24,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Latest',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Spacer(),
+                      Text(
+                        'See all',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          fontFamily: 'Poppins',
+                          color: AppColors.grayScale,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: BlocBuilder<HomeBloc, HomeState>(
-                  builder: (context, state) {
-                    if (state.newsList.isEmpty) {
-                      return const Center(child: Text('No news available'));
-                    } else {
-                      return ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        itemCount: state.newsList.length,
-                        itemBuilder: (context, index) {
-                          final news = state.newsList[index];
-                          return Column(
-                            children: [
-                              _buildItem(
-                                news.category,
-                                news.title,
-                                news.source,
-                                news.time,
-                                news.imageUrl,
-                                news.srcImage,
-                              ),
-                              const SizedBox(height: 16),
-                            ],
-                          );
+              Padding(
+                padding: EdgeInsets.fromLTRB(24, 0, 0, 0),
+                child: SizedBox(
+                  height: 34,
+                  child: TabBar(
+                    labelColor: AppColors.black,
+                    unselectedLabelColor: AppColors.grayScale,
+                    labelStyle: TextStyle( //khi duoc chon
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Poppins'
+                    ),
+                    unselectedLabelStyle: TextStyle( //khi chua duoc chon
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                        fontFamily: 'Poppins'
+                    ),
+                    labelPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    indicatorPadding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),
+                    isScrollable: true,
+                    tabs: categories.map((category) => Tab(text: category)).toList(),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: TabBarView(
+                    children: categories.map((category) {
+                      return BlocBuilder<HomeBloc, HomeState>(
+                        builder: (context, state) {
+                          final newsList = state.newsList
+                              .where((news) => category == 'All' || news.category == category)
+                              .toList();
+          
+                          if (newsList.isEmpty) {
+                            return const Center(child: Text('No news available'));
+                          } else {
+                            return ListView.builder(
+                              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                              itemCount: newsList.length,
+                              itemBuilder: (context, index) {
+                                final news = newsList[index];
+                                return Column(
+                                  children: [
+                                    _buildItem(
+                                      news.category,
+                                      news.title,
+                                      news.source,
+                                      news.time,
+                                      news.imageUrl,
+                                      news.srcImage,
+                                    ),
+                                    const SizedBox(height: 16),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         },
                       );
-                    }
-                  },
+                    }).toList(),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+final List<String> categories = [
+  'All',
+  'Sports',
+  'Politics',
+  'Business',
+  'Health',
+  'Travel',
+  'Science',
+  'Fashion',
+  'Europe'
+];

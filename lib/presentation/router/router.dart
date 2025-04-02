@@ -1,5 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 
+import '../view/pages/detail_news/detail_news_page.dart';
+
+import '../view/pages/notification/notification_page.dart';
+
+import '../view/pages/search/search_page.dart';
+
 import '../view/pages/login/login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_clean_architecture/presentation/view/pages/login/login_page.dart';
@@ -20,9 +26,12 @@ class AppRouter extends RootStackRouter {
 
   @override
   final List<AutoRoute> routes = [
-    AutoRoute(page: HomeRoute.page, initial: true),
+    AutoRoute(page: HomeRoute.page),
     AutoRoute(page: NewTaskRoute.page),
     AutoRoute(page: TaskDetailRoute.page),
     AutoRoute(page: LoginRoute.page),
+    AutoRoute(page: SearchRoute.page),
+    AutoRoute(page: NotificationRoute.page, initial: true),
+    AutoRoute(page: DetailNewsRoute.page),
   ];
 }
