@@ -1,3 +1,5 @@
+import 'package:flutter_clean_architecture/domain/entities/users.dart';
+import 'package:flutter_clean_architecture/domain/usecases/get_users_list_use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
@@ -12,17 +14,17 @@ part 'login_state.dart';
 
 @injectable
 class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
-  LoginBloc() : super(const LoginState()) {
+  LoginBloc(this._getUsersListUseCase) : super(const LoginState()) {
     on<LoginEvent>((event, emit) async {
         try {
-          switch(event) {
-            case _LoadData():
-              emit(state.copyWith(pageStatus: PageStatus.Loaded));
-              break;
+          if (event == _LoadData()) {
+            final users = await _getUsersListUseCase.call(params: GetUsersListParam());
+              emit(state.copyWith(pageStatus: PageStatus.Loaded,));
           }
         } catch(e,s) {
             handleError(emit, ErrorConverter.convert(e, s));
         }
     });
   }
+  final GetUsersListUseCase _getUsersListUseCase;
 }

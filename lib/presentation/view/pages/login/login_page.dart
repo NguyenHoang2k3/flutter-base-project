@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../base/base_page.dart';
+import '../../../resources/colors.dart';
 import 'login_bloc.dart';
 
 @RoutePage()
@@ -31,13 +33,9 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
             SizedBox(
               height: 60,
               width: 222,
-              child: const Text(
+              child: Text(
                 'Welcome back you\'ve\nbeen missed',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.grey,
-                  fontFamily: 'assets/fonts/GoogleSans-Regular.ttf',
-                ),
+                style: Theme.of(context).own()?.textTheme?.h1,
               ),
             ),
             const SizedBox(height: 48),
@@ -45,32 +43,15 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
             // Username field
             Row(
               children: [
-                const Text(
-                  'Username',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
-                const Text(
-                  '*',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.red,
-                  ),
-                ),
+                Text('Username', style: Theme.of(context).own()?.textTheme?.h2),
+                Text('*', style: Theme.of(context).own()?.textTheme?.h2),
               ],
             ),
 
             const SizedBox(height: 4),
             TextField(
               decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  //borderSide: const BorderSide(color: Colors.black),
-                ),
+                fillColor: AppColors.white,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 14,
@@ -81,68 +62,73 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
             const SizedBox(height: 16),
             Row(
               children: [
-                const Text(
-                  'Password',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
-                const Text(
-                  '*',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.red,
-                  ),
-                ),
+                Text('Password', style: Theme.of(context).own()?.textTheme?.h2),
+                Text('*', style: Theme.of(context).own()?.textTheme?.h2),
               ],
             ),
             const SizedBox(height: 4),
             TextField(
-              obscureText: true,
               decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
-                ),
-
+                fillColor: AppColors.white,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 14,
                 ),
+                suffixIcon: IconButton(
+                  icon: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Image.asset("assets/images/Icon.png"),
+                  ),
+
+                  onPressed: () {},
+                ),
               ),
             ),
-            const SizedBox(height: 8),
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Checkbox(
-                  value: true,
-                  activeColor: Colors.blue,
-                  onChanged: (value) {},
+                const SizedBox(width: 2),
+                GestureDetector(
+                  onTap: () {
+                    // Xử lý sự kiện khi bấm vào
+                  },
+
+                  child: Container(
+                    width: 18,
+                    height: 18,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3),
+                      shape: BoxShape.rectangle,
+                      color: true ? Colors.blue : Colors.transparent,
+                    ),
+                    child: true
+                        ? Icon(Icons.check, size: 14, color: Colors.white)
+                        : null,
+                  ),
                 ),
-                const Text(
+                const SizedBox(width: 6),
+                Text(
                   'Remember me',
-                  style: TextStyle(fontSize: 14, color: Colors.black87),
+                  style: Theme.of(context).own()?.textTheme?.h2,
                 ),
                 Spacer(),
                 TextButton(
                   onPressed: () {},
                   child: const Text(
                     'Forgot the password ?',
-                    style: TextStyle(color: Colors.blue, fontSize: 14),
+                    style: TextStyle(color: AppColors.bluee, fontSize: 14),
                   ),
                 ),
               ],
             ),
             SizedBox(
-              width: double.infinity,
+              width: 379,
               height: 50,
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: AppColors.blueee,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -150,22 +136,16 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                 ),
                 child: const Text(
                   'Login',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
             const SizedBox(height: 16),
             // Or continue with
-            const Center(
+            Center(
               child: Text(
                 'or continue with',
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 14,
-                ),
+                style: Theme.of(context).own()?.textTheme?.h2,
               ),
             ),
             const SizedBox(height: 16),
@@ -173,13 +153,13 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _socialLoginButton(
-                  icon: Icons.facebook,
+                  icon: 'assets/images/facebook.svg',
                   label: 'Facebook',
                   onPressed: () {},
                 ),
                 Spacer(),
                 _socialLoginButton(
-                  icon: Icons.g_mobiledata_outlined,
+                  icon: 'assets/images/google.svg',
                   label: 'Google',
                   onPressed: () {},
                 ),
@@ -189,9 +169,9 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
             // Sign up text
             Center(
               child: RichText(
-                text: const TextSpan(
+                text: TextSpan(
                   text: 'don\'t have an account? ',
-                  style: TextStyle(color: Colors.black54, fontSize: 14),
+                  style: Theme.of(context).own()?.textTheme?.h2,
                   children: [
                     TextSpan(
                       text: 'Sign Up',
@@ -209,8 +189,9 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
       ),
     );
   }
+
   Widget _socialLoginButton({
-    required IconData icon,
+    required String icon,
     required String label,
     required VoidCallback onPressed,
   }) {
@@ -221,27 +202,31 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: Colors.white),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           backgroundColor: Colors.grey[100],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: label == 'Facebook' ? Colors.blue : Colors.red,
-              size: label == 'Facebook' ? 24 : 40,
-            ),
+
+              SizedBox(
+                width: 21,
+                height: 21,
+                child: SvgPicture.asset(icon),
+              ),
+
             const SizedBox(width: 8),
             Text(
               label,
-              style: const TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
+              style:  TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  height: 22 / 14,
+                  color: AppColors.grayScalee,
+                  fontFamily: 'Poppins'
               ),
-            ),
+              ),
+
           ],
         ),
       ),

@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_clean_architecture/presentation/resources/colors.dart';
+import 'package:flutter_clean_architecture/presentation/resources/themes.dart';
 
 import '../../../base/base_page.dart';
 import 'search_bloc.dart';
@@ -17,9 +19,13 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
 
   @override
   Widget builder(BuildContext context) {
-    return SizedBox(
-
-
+    return SafeArea(
+      child: Text(
+        'hssssssssssssssssssssssssssssssehe',
+        style: AppTheme.lightTheme.textTheme?.bodyLarge?.copyWith(
+          color: AppColors.grayScaleTitle,
+        ),
+      ),
     );
   }
 }

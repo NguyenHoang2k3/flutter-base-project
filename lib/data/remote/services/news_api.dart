@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import '../models/respone/news.dart';
+import '../models/respone/user.dart';
 
 part 'news_api.g.dart';
 
@@ -10,4 +11,7 @@ abstract class NewsApi {
 
   @GET("/news/news")
   Future<List<NewsRespone>> getNews();
+
+  @GET("/news/users")
+  Future<List<UserRespone>> getUsers();
 }

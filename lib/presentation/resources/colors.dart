@@ -56,6 +56,14 @@ abstract class AppColors {
   static const elephant = Color(0xFF11374B);
   static const pictonBlue = Color(0xFF56CCF2);
   static const grayScale = Color(0xFF4E4B66);
+  static const grayScaleTitle = Color(0xFF050505);
+  static const grayScaleButton = Color(0xFFEEF1F4);
+  static const grayScalee= Color(0xFF667080);
+  static const bluee = Color(0xFF5890FF);
+  static const blueee = Color(0xFF1877F2);
+
+
+
   static const chartColors = [
     AppColors.blueRibbon,
     AppColors.lightningYellow,
