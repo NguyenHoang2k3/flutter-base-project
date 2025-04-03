@@ -1,19 +1,23 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../gen/fonts.gen.dart';
+import 'colors.dart';
 
 abstract class AppStyles {
   static const h1 = TextStyle(
-    fontWeight: FontWeight.w500,
-    fontSize: 32,
-    height: 32 / 32,
-    fontFamily: FontFamily.googleSans,
+    fontSize: 20,
+      height: 30 / 20,
+    fontWeight: FontWeight.w400,
+    color: AppColors.grayScale,
+    fontFamily: 'Poppins'
   );
   static const h2 = TextStyle(
-    fontWeight: FontWeight.w700,
-    fontSize: 24,
-    height: 32 / 24,
-    fontFamily: FontFamily.googleSans,
+    fontWeight: FontWeight.w400,
+    fontSize: 14,
+    height: 22 / 14,
+      color: AppColors.grayScale,
+      fontFamily: 'Poppins'
   );
   static const h3 = TextStyle(
     fontWeight: FontWeight.w500,

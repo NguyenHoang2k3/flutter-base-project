@@ -58,6 +58,9 @@ class AppColorSchema {
     this.secondary4,
     this.badgeColor,
     this.title2,
+    this.c1,
+    this.c2,
+    this.c3,
   });
 
   final Color? primary;
@@ -74,4 +77,7 @@ class AppColorSchema {
   final Color? barrierColor;
   final Color? badgeColor;
   final Color? title2;
+  final Color? c1;
+  final Color? c2;
+  final Color? c3;
 }

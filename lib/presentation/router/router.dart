@@ -26,11 +26,11 @@ class AppRouter extends RootStackRouter {
 
   @override
   final List<AutoRoute> routes = [
-    AutoRoute(page: HomeRoute.page, initial: true),
+    AutoRoute(page: HomeRoute.page),
     AutoRoute(page: NewTaskRoute.page),
     AutoRoute(page: TaskDetailRoute.page),
     AutoRoute(page: LoginRoute.page),
-    AutoRoute(page: SearchRoute.page),
+    AutoRoute(page: SearchRoute.page, initial: true),
     AutoRoute(page: NotificationRoute.page),
     AutoRoute(page: DetailNewsRoute.page),
   ];

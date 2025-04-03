@@ -10,8 +10,8 @@ const kDefaultPaddingLabelTabBar = 8.0;
 
 abstract class AppTheme {
   static final InputBorder _defaultOutlineInputBorder = OutlineInputBorder(
-    borderSide: const BorderSide(color: AppColors.pattensBlue, width: 1),
-    borderRadius: BorderRadius.circular(12),
+    borderSide: const BorderSide(color: AppColors.grayScale, width: 1),
+    borderRadius: BorderRadius.circular(6),
   );
 
   static const _dividerTheme = DividerThemeData(
@@ -22,7 +22,7 @@ abstract class AppTheme {
 
   static ThemeData get lightTheme {
     return ThemeData(
-      fontFamily: FontFamily.googleSans,
+      fontFamily: FontFamily.poppins,
       useMaterial3: false,
       appBarTheme: AppBarTheme(
         color: AppColors.white,
@@ -107,6 +107,10 @@ abstract class AppTheme {
             barrierColor: AppColors.black80,
             badgeColor: AppColors.coralRed,
             title2: AppColors.gray76,
+            c1: AppColors.grayScale,
+            c2: AppColors.grayScaleTitle,
+            c3: AppColors.grayScaleButton,
+
           ),
         ),
       );

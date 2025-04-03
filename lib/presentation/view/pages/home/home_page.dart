@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_clean_architecture/presentation/router/router.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../base/base_page.dart';
 import '../../../resources/colors.dart';
-import '../notification/notification_page.dart';
 import 'home_bloc.dart';
 
 @RoutePage()
@@ -178,10 +178,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                       ),
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => NotificationPage()),
-                      );
+                      context.router.push(const NotificationRoute());
                     },
                     borderRadius: BorderRadius.circular(6), // Hiệu ứng ripple bo tròn
                     child: Container(
@@ -218,6 +215,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TextField(
                     decoration: InputDecoration(
+                      fillColor: AppColors.white,
                       hintText: "Search",
                       hintStyle: TextStyle(color: Colors.grey[500]),
                       prefixIcon: const Icon(Icons.search, color: Colors.grey),
@@ -233,7 +231,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                   ),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 child: SizedBox(
                   height: 24,
@@ -268,7 +266,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                   children: [
                     Image.asset('assets/images/landscape.png'),
                     SizedBox(height: 8),
-                    Text(
+                    const Text(
                       'Europe',
                       style: TextStyle(
                         fontSize: 13,
@@ -277,7 +275,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                       ),
                     ),
                     SizedBox(height: 4),
-                    Text(
+                    const Text(
                       'Russian warship: Moskva sinks in Black Sea',
                       style: TextStyle(
                         fontSize: 16,
@@ -299,7 +297,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        Text(
+                        const Text(
                           'BBC News',
                           style: const TextStyle(
                             fontSize: 13,
@@ -315,7 +313,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                           color: Colors.grey.shade500,
                         ),
                         const SizedBox(width: 2),
-                        Text(
+                        const Text(
                           '4h ago',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
@@ -329,7 +327,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                   ],
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 child: SizedBox(
                   height: 24,
