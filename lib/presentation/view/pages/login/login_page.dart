@@ -20,6 +20,8 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
 
   @override
   Widget builder(BuildContext context) {
+    final TextEditingController usernameController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
@@ -50,6 +52,7 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
 
             const SizedBox(height: 4),
             TextField(
+              controller: usernameController,
               decoration: InputDecoration(
                 fillColor: AppColors.white,
                 contentPadding: const EdgeInsets.symmetric(
@@ -68,6 +71,8 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
             ),
             const SizedBox(height: 4),
             TextField(
+              controller: passwordController, // Gắn controller
+              obscureText: true,
               decoration: InputDecoration(
                 fillColor: AppColors.white,
                 contentPadding: const EdgeInsets.symmetric(
@@ -102,9 +107,10 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                       shape: BoxShape.rectangle,
                       color: true ? Colors.blue : Colors.transparent,
                     ),
-                    child: true
-                        ? Icon(Icons.check, size: 14, color: Colors.white)
-                        : null,
+                    child:
+                        true
+                            ? Icon(Icons.check, size: 14, color: Colors.white)
+                            : null,
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -126,7 +132,15 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
               width: 379,
               height: 50,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  final username = usernameController.text;
+                  final password = passwordController.text;
+
+                  // Gửi sự kiện đến LoginBloc
+                  context.read<LoginBloc>().add(
+                    LoginEvent.login(username: username, password: password),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.blueee,
                   foregroundColor: Colors.white,
@@ -208,25 +222,19 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
-              SizedBox(
-                width: 21,
-                height: 21,
-                child: SvgPicture.asset(icon),
-              ),
+            SizedBox(width: 21, height: 21, child: SvgPicture.asset(icon)),
 
             const SizedBox(width: 8),
             Text(
               label,
-              style:  TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                  height: 22 / 14,
-                  color: AppColors.grayScalee,
-                  fontFamily: 'Poppins'
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+                height: 22 / 14,
+                color: AppColors.grayScalee,
+                fontFamily: 'Poppins',
               ),
-              ),
-
+            ),
           ],
         ),
       ),

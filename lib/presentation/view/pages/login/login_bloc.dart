@@ -16,14 +16,29 @@ part 'login_state.dart';
 class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
   LoginBloc(this._getUsersListUseCase) : super(const LoginState()) {
     on<LoginEvent>((event, emit) async {
-        try {
-          if (event == _LoadData()) {
-            final users = await _getUsersListUseCase.call(params: GetUsersListParam());
-              emit(state.copyWith(pageStatus: PageStatus.Loaded,));
+      try {
+        if (event == _LoadData()) {
+          final users = await _getUsersListUseCase.call(params: GetUsersListParam());
+          emit(state.copyWith(pageStatus: PageStatus.Loaded,usersList: users));
+        } else if (event is _Login) {
+          // Xử lý logic đăng nhập
+          final username = event.username;
+          final password = event.password;
+
+          // Ví dụ: Kiểm tra username và password
+          if (username.isEmpty || password.isEmpty) {
+            emit(state.copyWith(
+              pageStatus: PageStatus.Error,
+              pageErrorMessage: 'Username or password cannot be empty',
+            ));
+          } else {
+            // Gửi yêu cầu đăng nhập hoặc xử lý logic khác
+            emit(state.copyWith(pageStatus: PageStatus.Loaded));
           }
-        } catch(e,s) {
-            handleError(emit, ErrorConverter.convert(e, s));
         }
+      } catch (e, s) {
+        handleError(emit, ErrorConverter.convert(e, s));
+      }
     });
   }
   final GetUsersListUseCase _getUsersListUseCase;
