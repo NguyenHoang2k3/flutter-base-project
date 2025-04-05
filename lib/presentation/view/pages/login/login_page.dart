@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../base/base_page.dart';
 import '../../../resources/colors.dart';
+import '../../../router/router.dart';
 import 'login_bloc.dart';
 
 @RoutePage()
@@ -96,7 +97,6 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                 const SizedBox(width: 2),
                 GestureDetector(
                   onTap: () {
-                    // Xử lý sự kiện khi bấm vào
                   },
 
                   child: Container(
@@ -135,7 +135,7 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                 onPressed: () {
                   final username = usernameController.text;
                   final password = passwordController.text;
-
+                  context.router.push(const HomeRoute());
                   // Gửi sự kiện đến LoginBloc
                   context.read<LoginBloc>().add(
                     LoginEvent.login(username: username, password: password),

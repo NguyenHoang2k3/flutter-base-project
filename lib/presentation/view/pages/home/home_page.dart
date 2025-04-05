@@ -214,6 +214,9 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TextField(
+                    onTap: () {
+                      context.router.push(const SearchRoute());
+                    },
                     decoration: InputDecoration(
                       fillColor: AppColors.white,
                       hintText: "Search",
@@ -221,7 +224,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                       prefixIcon: const Icon(Icons.search, color: Colors.grey),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.tune, color: Colors.grey),
-                        onPressed: () {},
+                        onPressed: () {context.router.push(const SearchRoute());},
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -260,71 +263,76 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(32, 0, 32, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/images/landscape.png'),
-                    SizedBox(height: 8),
-                    const Text(
-                      'Europe',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: AppColors.grayScale,
-                        fontFamily: 'Poppins',
+                child: InkWell(
+                  onTap: () {
+                    context.router.push(const DetailNewsRoute());
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/images/landscape.png'),
+                      SizedBox(height: 8),
+                      const Text(
+                        'Europe',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.grayScale,
+                          fontFamily: 'Poppins',
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 4),
-                    const Text(
-                      'Russian warship: Moskva sinks in Black Sea',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w500,
+                      SizedBox(height: 4),
+                      const Text(
+                        'Russian warship: Moskva sinks in Black Sea',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w500,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 4),
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            'assets/images/bbc.png',
-                            width: 20,
-                            height: 20,
-                            fit: BoxFit.cover,
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              'assets/images/bbc.png',
+                              width: 20,
+                              height: 20,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        const Text(
-                          'BBC News',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Poppins',
-                            color: AppColors.grayScale,
+                          const SizedBox(width: 4),
+                          const Text(
+                            'BBC News',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Poppins',
+                              color: AppColors.grayScale,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.access_time,
-                          size: 12,
-                          color: Colors.grey.shade500,
-                        ),
-                        const SizedBox(width: 2),
-                        const Text(
-                          '4h ago',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            fontFamily: 'Poppins',
-                            color: AppColors.grayScale,
+                          const SizedBox(width: 8),
+                          Icon(
+                            Icons.access_time,
+                            size: 12,
+                            color: Colors.grey.shade500,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(width: 2),
+                          const Text(
+                            '4h ago',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              fontFamily: 'Poppins',
+                              color: AppColors.grayScale,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const Padding(

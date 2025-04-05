@@ -20,40 +20,46 @@ abstract class AppStyles {
       fontFamily: 'Poppins'
   );
   static const h3 = TextStyle(
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w400,
     fontSize: 16,
-    height: 18 / 16,
-    fontFamily: FontFamily.googleSans,
+    height: 22 / 16,
+    color: AppColors.black,
+    fontFamily: 'Poppins',
   );
   static const primary = TextStyle(
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w600,
     fontSize: 13,
-    height: 18 / 13,
-    fontFamily: FontFamily.googleSans,
+    height: 19.5 / 13,
+    color: AppColors.grayScale,
+    fontFamily: 'Poppins',
   );
   static const medium = TextStyle(
-    fontWeight: FontWeight.w500,
-    fontSize: 16,
-    height: 24 / 16,
-    fontFamily: FontFamily.googleSans,
+    fontWeight: FontWeight.w400,
+    fontSize: 11,
+    height: 22 / 11,
+    color: AppColors.grayScalee,
+    fontFamily: 'Poppins',
   );
   static const small = TextStyle(
     fontWeight: FontWeight.w400,
-    fontSize: 12,
-    height: 18 / 12,
-    fontFamily: FontFamily.googleSans,
+    fontSize: 16,
+    height: 22 / 16,
+    fontFamily: 'Poppins',
+    color: AppColors.grayScale
   );
   static const highlightsMedium = TextStyle(
-    fontWeight: FontWeight.w500,
-    fontSize: 13,
-    height: 18 / 13,
-    fontFamily: FontFamily.googleSans,
+    fontWeight: FontWeight.w400,
+    fontSize: 16,
+    height: 22 / 16,
+    color: AppColors.black,
+    fontFamily: 'Poppins',
   );
   static const highlightsBold = TextStyle(
-    fontWeight: FontWeight.w700,
-    fontSize: 14,
-    height: 24 / 14,
-    fontFamily: FontFamily.googleSans,
+    fontWeight: FontWeight.w400,
+    fontSize: 24,
+    height: 36 / 24,
+    color: AppColors.black,
+    fontFamily: 'Poppins',
   );
   static const button = TextStyle(
     fontWeight: FontWeight.w700,
