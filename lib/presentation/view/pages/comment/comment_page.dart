@@ -16,7 +16,6 @@ class CommentPage extends BasePage<CommentBloc, CommentEvent, CommentState> {
     context.read<CommentBloc>().add(const CommentEvent.loadData());
     super.onInitState(context);
   }
-
   @override
   Widget builder(BuildContext context) {
     return Scaffold(
@@ -43,10 +42,7 @@ class CommentPage extends BasePage<CommentBloc, CommentEvent, CommentState> {
                   SizedBox(width: 24),
                 ],
               ),
-
               SizedBox(height: 20),
-
-              // Comment list
               Expanded(
                 child: ListView(
                   children: [

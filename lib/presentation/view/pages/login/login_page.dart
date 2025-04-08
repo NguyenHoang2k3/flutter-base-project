@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../base/base_page.dart';
 import '../../../resources/colors.dart';
@@ -43,14 +45,12 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
             ),
             const SizedBox(height: 48),
 
-            // Username field
             Row(
               children: [
                 Text('Username', style: Theme.of(context).own()?.textTheme?.h2),
                 Text('*', style: Theme.of(context).own()?.textTheme?.h2),
               ],
             ),
-
             const SizedBox(height: 4),
             TextField(
               controller: usernameController,
@@ -175,7 +175,35 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                 _socialLoginButton(
                   icon: 'assets/images/google.svg',
                   label: 'Google',
-                  onPressed: () {},
+                  onPressed: () {
+                    Future<UserCredential?> signInWithGoogle() async {
+                      try {
+                        // Trigger quá trình đăng nhập
+                        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+                        if (googleUser == null) {
+                          // Người dùng huỷ đăng nhập
+                          return null;
+                        }
+
+                        // Lấy thông tin xác thực từ Google
+                        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+                        // Tạo credential để đăng nhập Firebase
+                        final credential = GoogleAuthProvider.credential(
+                          accessToken: googleAuth.accessToken,
+                          idToken: googleAuth.idToken,
+                        );
+
+                        // Đăng nhập vào Firebase
+                        return await FirebaseAuth.instance.signInWithCredential(credential);
+                      } catch (e) {
+                        print('Đăng nhập Google thất bại: $e');
+                        return null;
+                      }
+                    }
+
+                  },
                 ),
               ],
             ),

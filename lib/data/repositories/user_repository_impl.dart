@@ -1,3 +1,4 @@
+
 import 'package:flutter_clean_architecture/data/translator/users_translator.dart';
 import 'package:flutter_clean_architecture/domain/entities/users.dart';
 import 'package:injectable/injectable.dart';
@@ -14,4 +15,5 @@ class UsersRepositoryImpl extends UsersRepository {
 
     return response.map((e) => e.toEntity()).toList();
   }
+
 }

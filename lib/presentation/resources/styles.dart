@@ -48,7 +48,7 @@ abstract class AppStyles {
     color: AppColors.grayScale
   );
   static const highlightsMedium = TextStyle(
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w600,
     fontSize: 16,
     height: 22 / 16,
     color: AppColors.black,

@@ -136,6 +136,21 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
   Widget builder(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              context.router.push(const HomeRoute());
+              break;
+            case 1:
+              break;
+            case 2:
+              break;
+            case 3:
+              context.router.push(const ProfileRoute());
+              break;
+          }
+        },
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -152,10 +167,8 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
             label: 'Profile',
           ),
         ],
-        currentIndex: 0,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
-        onTap: (index) {},
       ),
       body: SafeArea(
         child: DefaultTabController(

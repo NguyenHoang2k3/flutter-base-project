@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/resources/colors.dart';
 import '../../../base/base_page.dart';
-import '../../../router/router.dart';
 import 'notification_bloc.dart';
 
 @RoutePage()
@@ -56,7 +55,7 @@ class NotificationPage
                     children: [
                       InkWell(
                         onTap: () {
-                          context.router.push(const HomeRoute());
+                          context.router.pop();
                         },
 
                         child: Image.asset(
