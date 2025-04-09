@@ -13,6 +13,15 @@ abstract class AppTheme {
     borderSide: const BorderSide(color: AppColors.grayScale, width: 1),
     borderRadius: BorderRadius.circular(6),
   );
+  static final InputBorder _errorOutlineInputBorder = OutlineInputBorder(
+    borderSide: const BorderSide(color: AppColors.errorDark, width: 1),
+    borderRadius: BorderRadius.circular(6),
+  );
+
+  static final InputBorder _darkOutlineInputBorder = OutlineInputBorder(
+    borderSide: const BorderSide(color: AppColors.darkmodeInputBackground, width: 1),
+    borderRadius: BorderRadius.circular(6),
+  );
 
   static const _dividerTheme = DividerThemeData(
     space: 0,
@@ -117,6 +126,77 @@ abstract class AppTheme {
   }
 
   static ThemeData get darkTheme {
-    return lightTheme.copyWith()..addOwn(Brightness.dark, lightTheme.own());
+    return ThemeData(
+      brightness: Brightness.dark,
+      fontFamily: FontFamily.poppins,
+      useMaterial3: false,
+      appBarTheme: AppBarTheme(
+        color: AppColors.darkmodeBackground,
+        titleTextStyle: AppStyles.title.copyWith(color: AppColors.darkmodeTitle),
+        shadowColor: Colors.black,
+      ),
+      colorScheme: const ColorScheme.dark(
+        background: AppColors.darkmodeBackground,
+        primary: AppColors.primaryDefault,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        border: _darkOutlineInputBorder,
+        focusedErrorBorder:_darkOutlineInputBorder ,
+        disabledBorder: _darkOutlineInputBorder,
+        enabledBorder: _darkOutlineInputBorder,
+        focusedBorder: _darkOutlineInputBorder,
+        //fillColor: AppColors.darkmodeInputBackground,
+        hintStyle: AppStyles.primary.copyWith(color: AppColors.darkmodeBody),
+        labelStyle: AppStyles.primary.copyWith(color: AppColors.darkmodeTitle),
+        errorStyle: AppStyles.primary.copyWith(color: AppColors.errorDarkmode),
+      ),
+      scaffoldBackgroundColor: AppColors.darkmodeBackground,
+      iconTheme: const IconThemeData(color: AppColors.darkmodeBody),
+      primaryIconTheme: const IconThemeData(color: AppColors.atlantis),
+      dividerTheme: _dividerTheme.copyWith(color: AppColors.grayscaleButtonText),
+      tabBarTheme: const TabBarTheme(
+        labelColor: AppColors.primaryDefault,
+        unselectedLabelColor: AppColors.grayscalePlaceholder,
+        indicatorColor: AppColors.primaryDefault,
+      ),
+
+    )..addOwn(
+      Brightness.dark,
+      AppThemeData(
+          textTheme: AppTextTheme(
+            textSmall: AppStyles.textSmall,
+            textXSmall: AppStyles.textXSmall,
+            textMedium: AppStyles.textMedium,
+            textLarge: AppStyles.textLarge,
+            textDisplaySmall: AppStyles.textDisplaySmall,
+            textDisplayMedium: AppStyles.textDisplayMedium,
+            textDisplayLarge: AppStyles.textDisplayLarge,
+            textDisplaySmallBold: AppStyles.textDisplaySmallBold,
+            textDisplayMediumBold: AppStyles.textDisplayMediumBold,
+            textDisplayLargeBold: AppStyles.textDisplayLargeBold,
+            textSmallLink: AppStyles.textSmallLink,
+            textXSmallLink: AppStyles.textXSmallLink,
+            textMediumLink: AppStyles.textMediumLink,
+            textLargeLink: AppStyles.textLargeLink,
+
+          ),
+          colorSchema: AppColorSchema(
+            darkmodeBackground: AppColors.darkmodeBackground,
+            darkmodeTitle: AppColors.darkmodeTitle,
+            darkmodeBody: AppColors.darkmodeBody,
+            darkmodeInputBackground: AppColors.darkmodeInputBackground,
+            warningDarkmode: AppColors.warningDarkmode,
+            errorDarkmode: AppColors.errorDarkmode,
+            successDark: AppColors.successDark,
+            iconWhite:AppColors.grayscaleWhite,
+            successDarkmode: AppColors.successDarkmode,
+            primaryDefault: AppColors.primaryDefault,
+            errorLight: AppColors.errorLight,
+          )
+      ),
+    );
   }
+
+
+
 }

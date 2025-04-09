@@ -19,21 +19,33 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
       try {
         if (event == _LoadData()) {
           final users = await _getUsersListUseCase.call(params: GetUsersListParam());
-          emit(state.copyWith(pageStatus: PageStatus.Loaded,usersList: users));
+          emit(state.copyWith(pageStatus: PageStatus.Loaded, usersList: users));
         } else if (event is _Login) {
-          // Xử lý logic đăng nhập
           final username = event.username;
           final password = event.password;
 
-          // Ví dụ: Kiểm tra username và password
           if (username.isEmpty || password.isEmpty) {
             emit(state.copyWith(
               pageStatus: PageStatus.Error,
               pageErrorMessage: 'Username or password cannot be empty',
             ));
           } else {
-            // Gửi yêu cầu đăng nhập hoặc xử lý logic khác
-            emit(state.copyWith(pageStatus: PageStatus.Loaded));
+            final user = state.usersList.firstWhere(
+                  (user) => user.username == username && user.password == password,
+            );
+
+            if (user != null) {
+              emit(state.copyWith(
+                pageStatus: PageStatus.Loaded,
+                isLoggedIn: true,
+                pageErrorMessage: 'Login successful!', // Thông báo thành công
+              ));
+            } else {
+              emit(state.copyWith(
+                pageStatus: PageStatus.Error,
+                pageErrorMessage: 'Invalid username or password', // Thông báo thất bại
+              ));
+            }
           }
         }
       } catch (e, s) {

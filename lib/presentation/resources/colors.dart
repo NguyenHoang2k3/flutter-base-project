@@ -61,6 +61,32 @@ abstract class AppColors {
   static const grayScalee= Color(0xFF667080);
   static const bluee = Color(0xFF5890FF);
   static const blueee = Color(0xFF1877F2);
+  static const a = Color(0xFFA0A3BD);
+
+  static const Color successDefault = Color(0xff00ba88);
+  static const Color darkBlack = Color(0xff000000);
+  static const Color successDark = Color(0xff00966d);
+  static const Color successDarkmode = Color(0xff34eab9);
+  static const Color successLight = Color(0xfff2fffb);
+  static const Color errorDefault = Color(0xffed2e7e);
+  static const Color errorDark = Color(0xffc30052);
+  static const Color errorDarkmode = Color(0xffff84b7);
+  static const Color errorLight = Color(0xfffff3f8);
+  static const Color warningDefault = Color(0xfff4b740);
+  static const Color warningDark = Color(0xff946200);
+  static const Color warningDarkmode = Color(0xffffd789);
+  static const Color primaryDefault = Color(0xff1877f2);
+  static const Color grayscaleWhite = Color(0xffffffff);
+  static const Color grayscaleTitleactive = Color(0xff050505);
+  static const Color grayscaleDisableInput = Color(0xffeef1f4);
+  static const Color grayscaleBodyText = Color(0xff4e4b66);
+  static const Color grayscalePlaceholder = Color(0xffa0a3bd);
+  static const Color grayscaleSecondaryButton = Color(0xffeef1f4);
+  static const Color grayscaleButtonText = Color(0xff667080);
+  static const Color darkmodeBackground = Color(0xff1c1e21);
+  static const Color darkmodeTitle = Color(0xffe4e6eb);
+  static const Color darkmodeBody = Color(0xffb0b3b8);
+  static const Color darkmodeInputBackground = Color(0xff3a3b3c);
 
 
 

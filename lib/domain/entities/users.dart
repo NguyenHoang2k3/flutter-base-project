@@ -11,10 +11,10 @@ class Users extends Equatable {
   });
 
 
-  final String id;
-  final String username;
-  final String email;
-  final String password;
+  final String? id;
+  final String? username;
+  final String? email;
+  final String? password;
 
 
 

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppThemeData {
-  AppThemeData({
-    this.textTheme,
-    this.colorSchema,
-  });
+  AppThemeData({this.textTheme, this.colorSchema});
 
   final AppTextTheme? textTheme;
   final AppColorSchema? colorSchema;
@@ -12,6 +9,21 @@ class AppThemeData {
 
 class AppTextTheme {
   AppTextTheme({
+    this.textSmall,
+    this.textXSmall,
+    this.textMedium,
+    this.textLarge,
+    this.textDisplaySmall,
+    this.textDisplayMedium,
+    this.textDisplayLarge,
+    this.textDisplaySmallBold,
+    this.textDisplayMediumBold,
+    this.textDisplayLargeBold,
+    this.textSmallLink,
+    this.textXSmallLink,
+    this.textMediumLink,
+    this.textLargeLink,
+
     this.h1,
     this.h2,
     this.h3,
@@ -40,10 +52,51 @@ class AppTextTheme {
   final TextStyle? header;
   final TextStyle? title2;
   final TextStyle? title3;
+
+  final TextStyle? textSmall;
+  final TextStyle? textXSmall;
+  final TextStyle? textMedium;
+  final TextStyle? textLarge;
+  final TextStyle? textDisplaySmall;
+  final TextStyle? textDisplayMedium;
+  final TextStyle? textDisplayLarge;
+  final TextStyle? textDisplaySmallBold;
+  final TextStyle? textDisplayMediumBold;
+  final TextStyle? textDisplayLargeBold;
+  final TextStyle? textSmallLink;
+  final TextStyle? textXSmallLink;
+  final TextStyle? textMediumLink;
+  final TextStyle? textLargeLink;
 }
 
 class AppColorSchema {
-  AppColorSchema({
+  AppColorSchema( {
+    this.successDefault,
+    this.successDark,
+    this.darkBlack,
+    this.successDarkmode,
+    this.successLight,
+    this.errorDefault,
+    this.errorDark,
+    this.errorDarkmode,
+    this.errorLight,
+    this.warningDefault,
+    this.warningDark,
+    this.warningDarkmode,
+    this.primaryDefault,
+    this.grayscaleWhite,
+    this.grayscaleTitleactive,
+    this.grayscaleDisableInput,
+    this.grayscaleBodyText,
+    this.grayscalePlaceholder,
+    this.grayscaleSecondaryButton,
+    this.grayscaleButtonText,
+    this.darkmodeBackground,
+    this.darkmodeTitle,
+    this.darkmodeBody,
+    this.darkmodeInputBackground,
+    this.iconWhite,
+
     this.primary,
     this.mainText,
     this.subText,
@@ -80,4 +133,30 @@ class AppColorSchema {
   final Color? c1;
   final Color? c2;
   final Color? c3;
+
+  final Color? successDefault;
+  final Color? successDark;
+  final Color? darkBlack;
+  final Color? successDarkmode;
+  final Color? successLight;
+  final Color? errorDefault;
+  final Color? errorDark;
+  final Color? errorDarkmode;
+  final Color? errorLight;
+  final Color? warningDefault;
+  final Color? warningDark;
+  final Color? warningDarkmode;
+  final Color? primaryDefault;
+  final Color? grayscaleWhite;
+  final Color? grayscaleTitleactive;
+  final Color? grayscaleDisableInput;
+  final Color? grayscaleBodyText;
+  final Color? grayscalePlaceholder;
+  final Color? grayscaleSecondaryButton;
+  final Color? grayscaleButtonText;
+  final Color? darkmodeBackground;
+  final Color? darkmodeTitle;
+  final Color? darkmodeBody;
+  final Color? darkmodeInputBackground;
+  final Color? iconWhite;
 }
