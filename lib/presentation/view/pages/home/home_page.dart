@@ -150,6 +150,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                             indicatorSize: TabBarIndicatorSize.label,
                           indicatorPadding: EdgeInsets.only(bottom: 6),
                           tabs: categories.map((e) => Tab(text: e)).toList(),
+                          labelPadding: EdgeInsets.symmetric(horizontal: 5),
                           labelColor: AppColors.black,
                           unselectedLabelColor: AppColors.grayScale,
                           labelStyle: Theme.of(context).own()?.textTheme?.h3,

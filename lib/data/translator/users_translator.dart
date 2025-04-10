@@ -9,6 +9,9 @@ extension UsersTranslator on UserRespone {
       email: email ?? "",
       password: password ?? "",
       username: username ?? "",
+      imageUrl: imageUrl ?? '',
+      isFollow: isFollow == 'true' ? true : false,
+
     );
   }
 }

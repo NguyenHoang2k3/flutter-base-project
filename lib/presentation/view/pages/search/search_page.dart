@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/resources/colors.dart';
 import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
 import '../../../base/base_page.dart';
+import '../../../base/page_status.dart';
 import '../../../router/router.dart';
 import 'search_bloc.dart';
 
@@ -32,6 +33,9 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 0),
                   child: TextField(
+                    onChanged: (value) {
+                      context.read<SearchBloc>().add(SearchEvent.queryChanged(value));
+                    },
                     decoration: InputDecoration(
                       fillColor: AppColors.white,
                       hintText: "Search",
@@ -76,14 +80,64 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                     categories.map((category) => Tab(text: category)).toList(),
               ),
               Expanded(
-                child: TabBarView(
-                  children: [
-                    _buildNewsList(),
-                    _buildTopicsList(),
-                    _buildAuthorsList(),
-                  ],
+                child: BlocBuilder<SearchBloc, SearchState>(
+                  builder: (context, state) {
+                    if (state.pageStatus != PageStatus.Loaded) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return TabBarView(
+                      children: [
+                        // News
+                        ListView.builder(
+                          itemCount: state.listNews?.length,
+                          itemBuilder: (context, index) {
+                            final news = state.listNews?[index];
+                            return _buildItem(
+                              news!.category,
+                              news.title,
+                              news.source,
+                              news.time,
+                              news.imageUrl,
+                              news.srcImage,
+                              context,
+                            );
+                          },
+                        ),
+
+                        // Topics
+                        ListView.builder(
+                          itemCount: state.listTopics?.length,
+                          itemBuilder: (context, index) {
+                            final topic = state.listTopics?[index];
+                            return _buildItemTopic(
+                              topic!.id,
+                              topic!.imageUrl,
+                              topic.name,
+                              topic.context,
+                              context,
+                            );
+                          },
+                        ),
+
+                        // Author
+                        ListView.builder(
+                          itemCount: state.listUsers?.length,
+                          itemBuilder: (context, index) {
+                            final author = state.listUsers?[index];
+                            return _buildItemAuthor(
+                              author!.imageUrl,
+                              author!.username,
+                              '1.2M Followers',
+                              context,
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
+
             ],
           ),
         ),
@@ -183,11 +237,14 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
   }
 
   Widget _buildItemTopic(
+      String index,
     String image,
     String title,
     String contextt,
     BuildContext context,
   ) {
+    final topic = context.read<SearchBloc>().state.listTopics?.firstWhere((t) => t.id == index);
+    final isSaved = topic?.save ?? false;
     return SizedBox(
       height: 86,
       child: Row(
@@ -222,7 +279,9 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
             width: 78,
             height: 34,
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.read<SearchBloc>().add(SearchEvent.changeSaveTopic(index));
+              },
               style: TextButton.styleFrom(
                 fixedSize: Size(78, 34),
                 foregroundColor: AppColors.blueee,
@@ -235,7 +294,7 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Save",
+                  isSaved ? "Saved" : "Save",
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Poppins',
@@ -257,6 +316,8 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
     String followers,
     BuildContext context,
   ) {
+    final author = context.read<SearchBloc>().state.listUsers?.firstWhere((u) => u.username == title);
+    final isFollowed = author?.isFollow ?? false;
     return SizedBox(
       height: 86,
       child: Row(
@@ -282,7 +343,9 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
             width: 95,
             height: 32,
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.read<SearchBloc>().add(SearchEvent.changeFollowUser(title));
+              },
               style: TextButton.styleFrom(
                 fixedSize: Size(78, 34),
                 foregroundColor: AppColors.blueee,
@@ -299,14 +362,15 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                   children: [
                     Icon(Icons.add, color: AppColors.blueee),
                     Text(
-                      "Follow",
+                      isFollowed ? "Following" : "Follow",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: isFollowed ? 14 : 16,
                         fontFamily: 'Poppins',
                         color: AppColors.blueee,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+
                   ],
                 ),
               ),
@@ -314,128 +378,6 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildNewsList() {
-    final List<Map<String, String>> newsList = [
-      {
-        "category": "Europe",
-        "title":
-            "Ukraine President Zelensky to BBC: Blood money being paid thens jejee",
-        "source": "BBC News",
-        "time": "14m ago",
-        "imageUrl": "assets/images/ImageNews.png",
-        "srcImage": "assets/images/cnn.png",
-      },
-      {
-        "category": "Europe",
-        "title":
-            "Ukraine President Zelensky to BBC: Blood money being paid thens jejee",
-        "source": "BBC News",
-        "time": "14m ago",
-        "imageUrl": "assets/images/ImageNews.png",
-        "srcImage": "assets/images/cnn.png",
-      },
-    ];
-
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      itemCount: newsList.length,
-      itemBuilder: (context, index) {
-        final news = newsList[index];
-        return _buildItem(
-          news['category']!,
-          news['title']!,
-          news['source']!,
-          news['time']!,
-          news['imageUrl']!,
-          news['srcImage']!,
-          context!,
-        );
-      },
-    );
-  }
-
-  Widget _buildTopicsList() {
-    final List<Map<String, String>> topicsList = [
-      {
-        "image": "assets/images/health.png",
-        "title": "Health",
-        "context":
-            "View the lastest health news and explore artices on huhuhuuuhuhuhuu",
-      },
-      {
-        "image": "assets/images/health.png",
-        "title": "Health",
-        "context":
-            "View the lastest health news and explore artices on huhuhuuuhuhuhuu",
-      },
-      {
-        "image": "assets/images/health.png",
-        "title": "Health",
-        "context":
-            "View the lastest health news and explore artices on huhuhuuuhuhuhuu",
-      },
-      {
-        "image": "assets/images/health.png",
-        "title": "Health",
-        "context":
-            "View the lastest health news and explore artices on huhuhuuuhuhuhuu",
-      },
-    ];
-
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 16),
-      itemCount: topicsList.length,
-      itemBuilder: (context, index) {
-        final topic = topicsList[index];
-        return _buildItemTopic(
-          topic['image']!,
-          topic['title']!,
-          topic['context']!,
-          context,
-        );
-      },
-    );
-  }
-
-  Widget _buildAuthorsList() {
-    final List<Map<String, String>> authorsList = [
-      {
-        "image": "assets/images/bbc.png",
-        "title": "BBC News",
-        "followers": "1.2M Followers",
-      },
-      {
-        "image": "assets/images/bbc.png",
-        "title": "BBC News",
-        "followers": "1.2M Followers",
-      },
-      {
-        "image": "assets/images/bbc.png",
-        "title": "BBC News",
-        "followers": "1.2M Followers",
-      },
-      {
-        "image": "assets/images/bbc.png",
-        "title": "BBC News",
-        "followers": "1.2M Followers",
-      },
-    ];
-
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 16),
-      itemCount: authorsList.length,
-      itemBuilder: (context, index) {
-        final topic = authorsList[index];
-        return _buildItemAuthor(
-          topic['image']!,
-          topic['title']!,
-          topic['followers']!,
-          context,
-        );
-      },
     );
   }
 }

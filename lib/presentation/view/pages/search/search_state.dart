@@ -2,9 +2,29 @@ part of 'search_bloc.dart';
 
 @freezed
 class SearchState extends BaseState with _$SearchState {
+  const SearchState({
+    super.pageStatus = PageStatus.Loaded,
+    super.pageErrorMessage,
+    this.query = '',
+    this.listNews,
+    this.listTopics,
+    this.listUsers,
+    this.isFollow = false,
+    this.saveTopic = false,
+  });
 
-  const SearchState._({required super.pageStatus, required super.pageErrorMessage});
+  @override
+  final List<News>? listNews;
 
-  const factory SearchState({@Default(PageStatus.Loaded) PageStatus pageStatus,
-  String? pageErrorMessage,}) = _SearchState;
+  @override
+  final List<Topics>? listTopics;
+  @override
+  final List<Users>? listUsers;
+
+  @override
+  final String query;
+  @override
+  final bool isFollow;
+  @override
+  final bool saveTopic;
 }
