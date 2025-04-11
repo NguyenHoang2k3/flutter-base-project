@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../base/base_page.dart';
 import '../../../router/router.dart';
@@ -17,6 +18,26 @@ class SettingPage extends BasePage<SettingBloc, SettingEvent, SettingState> {
   void onInitState(BuildContext context) {
     context.read<SettingBloc>().add(const SettingEvent.loadData());
     super.onInitState(context);
+  }
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    context.router.replace(const LoginRoute());
+  }
+  Future<void> _saveThemeMode(bool isDarkMode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDarkMode', isDarkMode);
+  }
+
+  Future<bool> _loadThemeMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isDarkMode') ?? false;
+  }
+
+  Future<void> _toggleThemeMode(BuildContext context, bool isDarkMode) async {
+    await _saveThemeMode(isDarkMode);
+    final themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    context.read<SettingBloc>().add(SettingEvent.changeTheme(themeMode));
   }
 
   @override
@@ -145,31 +166,42 @@ class SettingPage extends BasePage<SettingBloc, SettingEvent, SettingState> {
               ),
             ),
             SizedBox(height: 48),
-            SizedBox(
-              height: 24,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-                    child: SvgPicture.asset(
-                      'assets/images/dark.svg',
-                      width: 20,
-                      height: 20,
-                    ),
+            FutureBuilder<bool>(
+              future: _loadThemeMode(),
+              builder: (context, snapshot) {
+                final isDarkMode = snapshot.data ?? false;
+                return SizedBox(
+                  height: 24,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
+                        child: SvgPicture.asset(
+                          'assets/images/dark.svg',
+                          width: 20,
+                          height: 20,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        'Dark Mode',
+                        style: Theme.of(context).own()?.textTheme?.h3,
+                      ),
+                      Spacer(),
+                      SizedBox(
+                        height: 16,
+                        width: 32,
+                        child: CupertinoSwitch(
+                          value: isDarkMode,
+                          onChanged: (value) async {
+                            await _toggleThemeMode(context, value);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 4),
-                  Text(
-                    'Dark Mode',
-                    style: Theme.of(context).own()?.textTheme?.h3,
-                  ),
-                  Spacer(),
-                  CupertinoSwitch(
-                    value: true,
-                    onChanged: (value) {
-                    },
-                  ),
-                ],
-              ),
+                );
+              },
             ),
             SizedBox(height: 48),
             SizedBox(
@@ -186,8 +218,8 @@ class SettingPage extends BasePage<SettingBloc, SettingEvent, SettingState> {
                   ),
                   SizedBox(width: 4),
                   InkWell(
-                    onTap: () {
-                      context.router.push(const LoginRoute());
+                    onTap: () async {
+                      await _logout(context);
                     },
                     child: Text(
                       'Logout',

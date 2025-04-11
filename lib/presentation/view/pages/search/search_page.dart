@@ -7,15 +7,19 @@ import '../../../base/base_page.dart';
 import '../../../base/page_status.dart';
 import 'search_bloc.dart';
 
+
 @RoutePage()
 class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
   const SearchPage({Key? key}) : super(key: key);
+
 
   @override
   void onInitState(BuildContext context) {
     context.read<SearchBloc>().add(const SearchEvent.loadData());
     super.onInitState(context);
   }
+
+
 
   @override
   Widget builder(BuildContext context) {
@@ -282,6 +286,7 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                 context.read<SearchBloc>().add(SearchEvent.changeSaveTopic(index));
               },
               style: TextButton.styleFrom(
+                backgroundColor: isSaved ? AppColors.blueee : AppColors.white,
                 fixedSize: Size(78, 34),
                 foregroundColor: AppColors.blueee,
                 side: BorderSide(color: AppColors.blueee),
@@ -297,7 +302,7 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Poppins',
-                    color: AppColors.blueee,
+                    color: isSaved ? AppColors.white : AppColors.blueee,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -346,8 +351,9 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                 context.read<SearchBloc>().add(SearchEvent.changeFollowUser(title));
               },
               style: TextButton.styleFrom(
+                backgroundColor: isFollowed ? AppColors.blueee : AppColors.white,
                 fixedSize: Size(78, 34),
-                foregroundColor: AppColors.blueee,
+                foregroundColor: isFollowed ? AppColors.white : AppColors.blueee,
                 side: BorderSide(color: AppColors.blueee),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -359,13 +365,14 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.add, color: AppColors.blueee),
+                    if (!isFollowed)
+                      Icon(Icons.add, color: AppColors.blueee),
                     Text(
                       isFollowed ? "Following" : "Follow",
                       style: TextStyle(
                         fontSize: isFollowed ? 14 : 16,
                         fontFamily: 'Poppins',
-                        color: AppColors.blueee,
+                        color: isFollowed ? AppColors.white : AppColors.blueee,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

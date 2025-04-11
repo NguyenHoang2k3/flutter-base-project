@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/domain/entities/current_user.dart';
 import 'package:flutter_clean_architecture/presentation/resources/colors.dart';
 import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../../base/base_page.dart';
 import 'edit_profile_bloc.dart';
-
 @RoutePage()
 class EditProfilePage
     extends BasePage<EditProfileBloc, EditProfileEvent, EditProfileState> {
@@ -66,7 +66,7 @@ class EditProfilePage
           final TextEditingController websiteController =
           TextEditingController(text: user.website ?? '');
 
-          return Padding(
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Form(
               key: _formKey,
@@ -91,7 +91,38 @@ class EditProfilePage
                           'Edit Profile',
                           style: Theme.of(context).own()?.textTheme?.h3,
                         ),
-                        Icon(Icons.check, color: AppColors.blueee),
+                        InkWell(
+                          onTap: () async {
+                            if (_formKey.currentState?.validate() != true) return;
+
+                            final updatedUser = CurrentUser(
+                              id: user.id,
+                              username: usernameController.text,
+                              fullName: fullNameController.text,
+                              email: emailController.text,
+                              phoneNumber: phoneNumberController.text,
+                              bio: bioController.text.isNotEmpty
+                                  ? bioController.text
+                                  : null,
+                              website: websiteController.text.isNotEmpty
+                                  ? websiteController.text
+                                  : null,
+                              imagePath: user.imagePath,
+                            );
+
+                            await _saveUserProfile(updatedUser);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Profile updated successfully!'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+
+                            context.router.pop();
+                          },
+                          child: Icon(Icons.check, color: AppColors.black),
+                        ),
                       ],
                     ),
                   ),
@@ -111,7 +142,7 @@ class EditProfilePage
                       Positioned(
                         bottom: 0,
                         right: 17,
-                        child: Icon(Icons.edit, color: AppColors.blueee),
+                        child: SvgPicture.asset('assets/images/editimage.svg'),
                       ),
                     ],
                   ),
@@ -122,7 +153,7 @@ class EditProfilePage
                   _buildTextField(context, 'Full Name', fullNameController),
                   const SizedBox(height: 16),
                   _buildTextField(context, 'Email Address', emailController,
-                      isRequired: true, enabled: false, isEmail: true),
+                      isRequired: true, enabled: true, isEmail: true),
                   const SizedBox(height: 16),
                   _buildTextField(
                     context,
@@ -136,41 +167,6 @@ class EditProfilePage
                   const SizedBox(height: 16),
                   _buildTextField(context, 'Website', websiteController),
                   const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState?.validate() != true) return;
-
-                        final updatedUser = CurrentUser(
-                          id: user.id,
-                          username: usernameController.text,
-                          fullName: fullNameController.text,
-                          email: emailController.text,
-                          phoneNumber: phoneNumberController.text,
-                          bio: bioController.text.isNotEmpty
-                              ? bioController.text
-                              : null,
-                          website: websiteController.text.isNotEmpty
-                              ? websiteController.text
-                              : null,
-                          imagePath: user.imagePath,
-                        );
-
-                        await _saveUserProfile(updatedUser);
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Profile updated successfully!'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-
-                        context.router.pop();
-                      },
-                      child: const Text('Save Changes'),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -239,3 +235,4 @@ class EditProfilePage
     );
   }
 }
+

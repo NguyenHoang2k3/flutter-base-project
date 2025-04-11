@@ -47,6 +47,22 @@ class NewsRepositoryImpl extends NewsRepository {
   }
 
   @override
+  Future<News?> getNewsById(String id) async {
+    final response = await _newsRemoteDataSource.getNews();
+
+    final newsList = response.map((e) => e.toEntity()).toList();
+
+    try {
+      return newsList.firstWhere(
+            (news) => news.id.trim().toLowerCase() == id.trim().toLowerCase(),
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+
+  @override
   Future<bool> changeFollows(String userName) async {
     final response = await _newsRemoteDataSource.getUsers();
     List<Users> users = response.map((e) => e.toEntity()).toList();

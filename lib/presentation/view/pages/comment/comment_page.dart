@@ -30,7 +30,7 @@ class CommentPage extends BasePage<CommentBloc, CommentEvent, CommentState> {
                 children: [
                   InkWell(
                     onTap: () {
-                      context.router.push(const DetailNewsRoute());
+                      context.router.pop();
                     },
                     child: Image.asset(
                       'assets/images/back.png',
@@ -134,7 +134,7 @@ class CommentPage extends BasePage<CommentBloc, CommentEvent, CommentState> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: Theme.of(context).own()?.textTheme?.h2),
+                Text(name, style: Theme.of(context).own()?.textTheme?.h3),
                 SizedBox(height: 4),
                 Text(comment),
                 SizedBox(height: 6),

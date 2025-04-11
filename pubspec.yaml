@@ -172,9 +172,16 @@ flutter:
           weight: 100
           style: italic
 flutter_native_splash:
-  color: "#ffffff" # Màu nền
-  image: assets/images/kabar.png # Logo splash (tùy chọn)
+  color: "#ffffff"
+  image: assets/images/kabar.png
+  android_12:
+    image: assets/images/kabar.png
+    icon_background_color: "#ffffff"
+  background_image: assets/images/kabar.png
+  fullscreen: true
+
+flutter_launcher_icons:
   android: true
-  android_gravity: center
   ios: true
-  web: false
+  image_path: "assets/images/logo.png"
+  adaptive_icon_background: "#ffffff"

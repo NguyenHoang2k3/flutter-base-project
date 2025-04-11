@@ -25,9 +25,8 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
       child: Stack(
         children: [
           Scaffold(
-            backgroundColor: Colors.white,
             bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: Colors.white,
+
               currentIndex: 0,
               onTap: (index) {
                 switch (index) {
@@ -98,7 +97,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                           if (newsList.isEmpty) return SizedBox.shrink();
                           final news = newsList[0];
                           return GestureDetector(
-                            onTap: () => context.router.push(const DetailNewsRoute()),
+                            onTap: () => context.router.push(DetailNewsRoute(newsId: news.id)),
                             child: Padding(
                               padding: const EdgeInsets.all(24.0),
                               child: Column(
@@ -175,7 +174,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                             separatorBuilder: (_, __) => SizedBox(height: 16),
                             itemBuilder: (context, index) {
                               final news = list[index];
-                              return _buildItem(news, context);
+                              return InkWell(onTap: () => context.router.push(DetailNewsRoute(newsId: news.id)),child: _buildItem(news, context));
                             },
                           );
                         },
@@ -193,7 +192,6 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
             left: 0,
             right: 0,
             child: Container(
-              color: Colors.white,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
               height: 80,
               child: Row(

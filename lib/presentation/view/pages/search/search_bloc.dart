@@ -7,6 +7,7 @@ import 'package:flutter_clean_architecture/domain/usecases/get_search_user_use_c
 import 'package:flutter_clean_architecture/domain/usecases/get_topics_list_use_case.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../domain/entities/news.dart';
 import '../../../../domain/entities/topics.dart';
@@ -29,20 +30,25 @@ class SearchBloc extends BaseBloc<SearchEvent, SearchState> {
             case _LoadData():
               emit(state.copyWith(pageStatus: PageStatus.Uninitialized));
 
-              final news = await _getNewsListUseCase.call(
-                params: GetNewsListParam(),
-              );
-              emit(state.copyWith(listNews: news));
-
-              final topics = await _getTopicsListUseCase.call(
-                params: GetTopicsListUseCaseParam(''),
-              );
-              emit(state.copyWith(listTopics: await topics));
-
-              final authors = await _getAuthorsListUseCase.call(
-                params: GetAuthorsListUseCaseParam(query: ''),
-              );
-              emit(state.copyWith(pageStatus: PageStatus.Loaded,listUsers: await authors));
+              try {
+                final news = await _getNewsListUseCase.call(
+                  params: GetNewsListParam(),
+                );
+                final topics = await _getTopicsListUseCase.call(
+                  params: GetTopicsListUseCaseParam(''),
+                );
+                final authors = await _getAuthorsListUseCase.call(
+                  params: GetAuthorsListUseCaseParam(query: ''),
+                );
+                emit(state.copyWith(
+                  pageStatus: PageStatus.Loaded,
+                  listNews: news,
+                  listTopics: topics,
+                  listUsers: authors,
+                ));
+              } catch (e, s) {
+                handleError(emit, ErrorConverter.convert(e, s));
+              }
               break;
             case _QueryChanged(:final query):
               emit(state.copyWith(query: query));
@@ -66,43 +72,69 @@ class SearchBloc extends BaseBloc<SearchEvent, SearchState> {
               emit(state.copyWith(listUsers: await filteredAuthors));
               break;
             case _ChangeSaveTopic(:final index):
-              final result = await _changeSaveTopicUseCase.call(
-                params: ChangeSaveTopicParam(index),
-              );
-              if (result) {
-                final updatedTopics = state.listTopics?.map((topic) {
-                  if (topic.id == index) {
-                    return topic.copyWith(save: !topic.save);
-                  }
-                  return topic;
-                }).toList();
-
-                emit(state.copyWith(listTopics: updatedTopics));
-              }
+              final updatedTopics = state.listTopics?.map((topic) {
+                if (topic.id == index) {
+                  final updatedTopic = topic.copyWith(save: !topic.save);
+                  _saveTopicState(updatedTopic);
+                  return updatedTopic;
+                }
+                return topic;
+              }).toList();
+              emit(state.copyWith(listTopics: updatedTopics));
               break;
 
             case _ChangeFollowUser(:final userName):
-              final result = await _changeFollowUseCase.call(
-                params: ChangeFollowParam(userName),
-              );
-              if (result && state.listUsers != null) {
-                final updatedUsers = state.listUsers!.map((user) {
-                  if (user.username == userName) {
-                    return user.copyWith(isFollow: !user.isFollow);
-                  }
-                  return user;
-                }).toList();
-
-                emit(state.copyWith(listUsers: updatedUsers));
-              } else {
-                print("Error: listUsers is null or no user found with username: $userName");
-              }
+              final updatedUsers = state.listUsers?.map((user) {
+                if (user.username == userName) {
+                  final updatedUser = user.copyWith(isFollow: !user.isFollow);
+                  _saveUserFollowState(updatedUser);
+                  return updatedUser;
+                }
+                return user;
+              }).toList();
+              emit(state.copyWith(listUsers: updatedUsers));
               break;
           }
         } catch(e,s) {
             handleError(emit, ErrorConverter.convert(e, s));
         }
     });
+  }
+  Future<void> _saveTopicState(Topics topic) async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedTopics = prefs.getStringList('savedTopics') ?? [];
+    if (topic.save) {
+      savedTopics.add(topic.id);
+    } else {
+      savedTopics.remove(topic.id);
+    }
+    await prefs.setStringList('savedTopics', savedTopics);
+  }
+
+  Future<void> _saveUserFollowState(Users user) async {
+    final prefs = await SharedPreferences.getInstance();
+    final followedUsers = prefs.getStringList('followedUsers') ?? [];
+    if (user.isFollow) {
+      followedUsers.add(user.username);
+    } else {
+      followedUsers.remove(user.username);
+    }
+    await prefs.setStringList('followedUsers', followedUsers);
+  }
+  Future<void> _loadSavedStates() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedTopics = prefs.getStringList('savedTopics') ?? [];
+    final followedUsers = prefs.getStringList('followedUsers') ?? [];
+
+    final updatedTopics = state.listTopics?.map((topic) {
+      return topic.copyWith(save: savedTopics.contains(topic.id));
+    }).toList();
+
+    final updatedUsers = state.listUsers?.map((user) {
+      return user.copyWith(isFollow: followedUsers.contains(user.username));
+    }).toList();
+
+    emit(state.copyWith(listTopics: updatedTopics, listUsers: updatedUsers));
   }
   final GetNewsListUseCase _getNewsListUseCase;
   final GetTopicsListUseCaseUseCase _getTopicsListUseCase;

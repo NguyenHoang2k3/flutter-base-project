@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
@@ -14,15 +15,18 @@ part 'setting_state.dart';
 class SettingBloc extends BaseBloc<SettingEvent, SettingState> {
   SettingBloc() : super(const SettingState()) {
     on<SettingEvent>((event, emit) async {
-        try {
-          switch(event) {
-            case _LoadData():
-              emit(state.copyWith(pageStatus: PageStatus.Loaded));
-              break;
-          }
-        } catch(e,s) {
-            handleError(emit, ErrorConverter.convert(e, s));
+      try {
+        switch (event) {
+          case _LoadData():
+            emit(state.copyWith(pageStatus: PageStatus.Loaded));
+            break;
+          case _ChangeTheme(:final themeMode):
+            emit(state.copyWith(themeMode: themeMode));
+            break;
         }
+      } catch (e, s) {
+        handleError(emit, ErrorConverter.convert(e, s));
+      }
     });
   }
 }
