@@ -12,6 +12,7 @@ extension UsersTranslator on UserRespone {
       imageUrl: imageUrl ?? '',
       isFollow: isFollow == 'true' ? true : false,
 
+
     );
   }
 }

@@ -21,6 +21,8 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
     on<HomeEvent>((event, emit) async {
       try {
         if (event == _LoadData()) {
+          emit(state.copyWith(pageStatus: PageStatus.Uninitialized));
+
           final news = await _getNewsListUseCase.call(
             params: GetNewsListParam(),
           );

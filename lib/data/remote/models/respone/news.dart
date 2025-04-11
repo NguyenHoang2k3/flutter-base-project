@@ -9,8 +9,13 @@ class NewsRespone {
   final String? time;
   final String? imageUrl;
   final String? srcImage;
+  final String? context;
+  final int? comment;
+  final int? like;
+  final bool? saved;
 
-  NewsRespone({
+
+  NewsRespone( {
     required this.id,
     required this.category,
     required this.title,
@@ -18,6 +23,7 @@ class NewsRespone {
     required this.time,
     required this.imageUrl,
     required this.srcImage,
+    this.context, this.comment, this.like, this.saved,
   });
 
   factory NewsRespone.fromJson(Map<String, dynamic> json) => _$NewsResponeFromJson(json);

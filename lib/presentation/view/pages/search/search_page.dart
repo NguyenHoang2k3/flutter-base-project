@@ -5,7 +5,6 @@ import 'package:flutter_clean_architecture/presentation/resources/colors.dart';
 import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
 import '../../../base/base_page.dart';
 import '../../../base/page_status.dart';
-import '../../../router/router.dart';
 import 'search_bloc.dart';
 
 @RoutePage()
@@ -43,7 +42,7 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                       prefixIcon: const Icon(Icons.search, color: Colors.grey),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear, color: Colors.grey),
-                        onPressed: () {context.router.push(const HomeRoute());},
+                        onPressed: () {context.pop();},
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),

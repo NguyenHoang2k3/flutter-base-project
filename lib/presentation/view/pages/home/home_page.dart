@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/router/router.dart';
 import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
 import '../../../base/base_page.dart';
+import '../../../base/page_status.dart';
 import '../../../resources/colors.dart';
 import 'home_bloc.dart';
 
@@ -163,6 +164,9 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                     children: categories.map((category) {
                       return BlocBuilder<HomeBloc, HomeState>(
                         builder: (context, state) {
+                          if (state.pageStatus != PageStatus.Loaded) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
                           final list = state.newsList.where((news) => category == 'All' || news.category == category).toList();
                           if (list.isEmpty) return Center(child: Text('No news available'));
                           return ListView.separated(
