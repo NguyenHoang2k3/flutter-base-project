@@ -7,11 +7,11 @@ import '../../../gen/assets.gen.dart';
 import '../../../shared/utils/keyboard.dart';
 import '../../resources/colors.dart';
 
-class AppFormField extends StatefulWidget {
-  const AppFormField({
+class AppSecureFormField extends StatefulWidget {
+  const AppSecureFormField({
     super.key,
     this.label,
-    this.required = false,
+    this.isRequired = false,
     this.value,
     this.enabled = true,
     this.textInputAction = TextInputAction.done,
@@ -31,17 +31,12 @@ class AppFormField extends StatefulWidget {
     this.isLoading = false,
     this.textDirection,
     this.obscuringCharacter = '*',
-    this.obscureText = false,
     this.validator,
     this.decoration,
-    this.isRequire = false,
-    this.onSuffixIconTap,
-    this.centerVertical = false,
-    this.autofocus = false,
   });
 
   final String? label;
-  final bool required;
+  final bool isRequired;
   final String? value;
   final bool readOnly;
   final int? minLines;
@@ -50,7 +45,6 @@ class AppFormField extends StatefulWidget {
   final TextInputType? keyboardType;
   final FocusNode? focusNode;
   final String obscuringCharacter;
-  final bool obscureText;
   final bool enabled;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
@@ -64,18 +58,13 @@ class AppFormField extends StatefulWidget {
   final Color? disableTextColor;
   final Color? disableBackgroundColor;
   final InputDecoration? decoration;
-  final bool isRequire;
-  final VoidCallback? onSuffixIconTap;
-  final bool centerVertical;
-  final bool autofocus;
-
   @override
-  State<AppFormField> createState() => _AppFormFieldState();
+  State<AppSecureFormField> createState() => _AppSecureFormFieldState();
 }
 
-class _AppFormFieldState extends State<AppFormField> {
+class _AppSecureFormFieldState extends State<AppSecureFormField> {
   late TextEditingController _controller;
-  bool hideClearWordBtn = true;
+  bool hidePassword = true;
 
   @override
   void initState() {
@@ -85,7 +74,7 @@ class _AppFormFieldState extends State<AppFormField> {
   }
 
   @override
-  void didUpdateWidget(covariant AppFormField oldWidget) {
+  void didUpdateWidget(covariant AppSecureFormField oldWidget) {
     if (_controller.text != widget.value) {
       _controller.text = widget.value ?? '';
     }
@@ -114,13 +103,9 @@ class _AppFormFieldState extends State<AppFormField> {
       borderRadius: BorderRadius.circular(6.0),
       borderSide: BorderSide(
         color:
-        Theme.of(context).brightness == Brightness.light
-            ? (widget.decoration?.errorBorder?.borderSide.color ??
+        widget.decoration?.errorBorder?.borderSide.color ??
             colorSchema?.errorDark ??
-            AppColors.errorDark)
-            : (widget.decoration?.errorBorder?.borderSide.color ??
-            colorSchema?.errorDarkmode ??
-            AppColors.errorDarkmode), // Border color
+            AppColors.errorDark, // Border color
       ),
     );
 
@@ -133,10 +118,6 @@ class _AppFormFieldState extends State<AppFormField> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment:
-      widget.centerVertical
-          ? MainAxisAlignment.center
-          : MainAxisAlignment.start,
       children: [
         if (widget.label != null)
           Text.rich(
@@ -153,7 +134,7 @@ class _AppFormFieldState extends State<AppFormField> {
                         : colorSchema?.darkmodeBody,
                   ),
                 ),
-                if (widget.isRequire)
+                if (widget.isRequired)
                   TextSpan(
                     text: '*',
                     style: textTheme?.textSmall?.copyWith(
@@ -167,105 +148,88 @@ class _AppFormFieldState extends State<AppFormField> {
             ),
           ),
         if (widget.label != null) Gap(4),
+        TextFormField(
+          obscuringCharacter: '*',
+          obscureText: hidePassword,
+          readOnly: widget.readOnly,
+          onChanged: widget.onChanged,
+          inputFormatters: widget.inputFormatters,
+          maxLength: widget.maxLength,
+          minLines: widget.minLines,
+          maxLines: widget.maxLines ?? 1,
+          keyboardType: widget.keyboardType,
+          textDirection: widget.textDirection,
+          onTap: widget.onTap,
+          onTapOutside: (event) {
+            hideKeyboard();
+          },
+          onFieldSubmitted: widget.onFieldSubmitted,
+          focusNode: widget.focusNode,
+          textInputAction: widget.textInputAction,
+          controller: _controller,
+          enabled: widget.enabled,
+          style: textTheme?.textSmall?.copyWith(
+            color: widget.decoration?.errorText == null ?
+            (widget.enabled
+                ? colorSchema?.grayscaleTitleactive
+                : widget.disableTextColor) : Colors.black,
+          ),
+          decoration: InputDecoration(
+            counterText: '',
+            //suffixIconConstraints: BoxConstraints.tight(const Size(40, 44)),
+            suffixIcon: InkWell(
+              onTap: () {
+                setState(() {
+                  hidePassword = !hidePassword;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 12, 12, 12),
+                child:
+                hidePassword
+                    ? Assets.icons.hind.svg(color: Theme.of(context).iconTheme.color)
+                    : Assets.icons.nothide.svg(color: Theme.of(context).iconTheme.color),
+              ),
+            ),
 
-        Container(
-          child: TextFormField(
-            autofocus: widget.autofocus,
-            obscuringCharacter: '*',
-            obscureText: widget.obscureText,
-            readOnly: widget.readOnly,
-            onChanged: widget.onChanged,
-            inputFormatters: widget.inputFormatters,
-            maxLength: widget.maxLength,
-            minLines: widget.minLines,
-            maxLines: widget.maxLines ?? 1,
-            keyboardType: widget.keyboardType,
-            textDirection: widget.textDirection,
-            onTap: () {
-              widget.onTap?.call();
-              setState(() {
-                hideClearWordBtn = false;
-              });
-            },
-            onTapOutside: (event) {
-              hideKeyboard();
-              setState(() {
-                hideClearWordBtn = true;
-              });
-            },
-            onFieldSubmitted: widget.onFieldSubmitted,
-            focusNode: widget.focusNode,
-            textInputAction: widget.textInputAction,
-            controller: _controller,
-            enabled: widget.enabled,
-            style: textTheme?.textSmall?.copyWith(
-              color: widget.decoration?.errorText == null ?
-              (widget.enabled
-                  ? colorSchema?.grayscaleTitleactive
-                  : widget.disableTextColor) : Colors.black,
+            //prefixIconConstraints: BoxConstraints.tight(const Size(40, 44)),
+            prefixIcon:
+            (widget.decoration?.prefixIcon != null)
+                ? Padding(
+              padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
+              child: widget.decoration?.prefixIcon,
+            )
+                : null,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 13.5,
             ),
-            decoration: InputDecoration(
-              counterText: '',
-              suffixIconConstraints: BoxConstraints.tight(const Size(36, 48)),
-              suffixIcon:
-              widget.decoration?.suffixIcon ??
-                  (!hideClearWordBtn
-                      ? InkWell(
-                    onTap: () {
-                      _controller.text = '';
-                      widget.onChanged?.call('');
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child:
-                      widget.decoration?.errorText == null
-                          ? Assets.icons.closeSearch.svg(
-                        color: Theme.of(context).iconTheme.color,
-                      )
-                          : Assets.icons.closeSearchIconError.svg(),
-                    ),
-                  )
-                      : null),
-              prefixIcon:
-              (widget.decoration?.prefixIcon != null)
-                  ? Padding(
-                padding: const EdgeInsets.only(top: 12,bottom: 12,left: 10),
-                child: widget.decoration?.prefixIcon,
-              )
-                  : null,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 13.5,
-              ),
-              filled: true,
-              fillColor:
-              widget.enabled
-                  ? fillColor
-                  : (widget.disableBackgroundColor ?? AppColors.white),
-              hintText: widget.decoration?.hintText,
-              hintStyle: textTheme?.textSmall?.copyWith(
-                color: colorSchema?.grayscalePlaceholder,
-              ),
-              enabledBorder: defaultBorder,
-              disabledBorder: defaultBorder,
-              focusedBorder:
-              widget.readOnly
-                  ? defaultBorder
-                  : OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6.0),
-                borderSide: BorderSide(
-                  color:
-                  colorSchema?.grayscaleBodyText ??
-                      AppColors.grayscaleBodyText, //lor
-                ),
-              ),
-              errorBorder: errorBorder,
-              focusedErrorBorder: errorBorder,
-              error:
-              widget.decoration?.errorText != null
-                  ? const SizedBox()
-                  : null,
+            filled: true,
+            fillColor:
+            widget.enabled
+                ? fillColor
+                : (widget.disableBackgroundColor ?? AppColors.white),
+            hintText: widget.decoration?.hintText,
+            hintStyle: textTheme?.textSmall?.copyWith(
+              color: colorSchema?.grayscalePlaceholder,
             ),
+            enabledBorder: defaultBorder,
+            disabledBorder: defaultBorder,
+            focusedBorder:
+            widget.readOnly
+                ? defaultBorder
+                : OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6.0),
+              borderSide: BorderSide(
+                color:
+                colorSchema?.grayscaleBodyText ??
+                    AppColors.grayscaleBodyText, //lor
+              ),
+            ),
+            errorBorder: errorBorder,
+            focusedErrorBorder: errorBorder,
+            error:
+            widget.decoration?.errorText != null ? const SizedBox() : null,
           ),
         ),
         if (widget.decoration?.errorText != null)

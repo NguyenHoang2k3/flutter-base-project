@@ -17,7 +17,16 @@ extension NewsTranslator on NewsRespone {
       context: context ?? "",
       like: like ?? 0,
       saved: saved ?? false,
-      users: Users(id: "0", username: "a", email: "a", imageUrl: "a", password: "a"),
+      users: Users(
+        "0",
+        "a",
+        "a",
+        "a",
+        "a",
+        0,
+        true,
+      ),
+
 
     );
   }

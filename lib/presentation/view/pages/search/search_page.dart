@@ -1,10 +1,13 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/resources/colors.dart';
-import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
+import 'package:flutter_clean_architecture/shared/extension/context.dart';
+import '../../../../gen/assets.gen.dart';
 import '../../../base/base_page.dart';
 import '../../../base/page_status.dart';
+import '../../../resources/locale_keys.dart';
 import 'search_bloc.dart';
 
 
@@ -23,6 +26,9 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
 
   @override
   Widget builder(BuildContext context) {
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
+    final iconColor =Theme.of(context).iconTheme.color;
     final List<String> categories = ['News', 'Topics', 'Author'];
     return DefaultTabController(
       length: categories.length,
@@ -41,11 +47,15 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                     },
                     decoration: InputDecoration(
                       fillColor: AppColors.white,
-                      hintText: "Search",
+                      hintText: LocaleKeys.home_home_search_hint
+                          .tr(),
                       hintStyle: TextStyle(color: Colors.grey[500]),
-                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                        prefixIcon: Assets.icons.search.svg(
+                          fit: BoxFit.scaleDown,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
                       suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.grey),
+                        icon: Icon(Icons.clear, color: iconColor),
                         onPressed: () {context.pop();},
                       ),
                       border: OutlineInputBorder(
@@ -58,20 +68,16 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
               ),
               const SizedBox(height: 16),
               TabBar(
+                indicatorColor: AppColors.primaryDefault,
                 indicatorWeight: 4.0,
-                labelColor: AppColors.black,
-                unselectedLabelColor: AppColors.grayScale,
-                labelStyle: const TextStyle(
-                  height: 16 / 22,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Poppins',
-                ),
-                unselectedLabelStyle: const TextStyle(
-                  height: 16 / 22,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Poppins',
+                labelColor: colorSchema?.darkTab,
+                labelStyle: textTheme?.textMedium,
+                unselectedLabelStyle: textTheme
+                    ?.textMedium
+                    ?.copyWith(
+                  color:
+                  colorSchema
+                      ?.grayscaleBodyText,
                 ),
                 labelPadding: const EdgeInsets.symmetric(horizontal: 12.0),
                 indicatorPadding: const EdgeInsets.symmetric(
@@ -82,6 +88,7 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                 tabs:
                     categories.map((category) => Tab(text: category)).toList(),
               ),
+              SizedBox(height: 16,),
               Expanded(
                 child: BlocBuilder<SearchBloc, SearchState>(
                   builder: (context, state) {
@@ -96,12 +103,12 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                           itemBuilder: (context, index) {
                             final news = state.listNews?[index];
                             return _buildItem(
-                              news!.category,
-                              news.title,
-                              news.source,
-                              news.time,
-                              news.imageUrl,
-                              news.srcImage,
+                              news!.category??'',
+                              news.title??'',
+                              news.source??'',
+                              news.time??'',
+                              news.imageUrl??'',
+                              news.srcImage??'',
                               context,
                             );
                           },
@@ -128,8 +135,8 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                           itemBuilder: (context, index) {
                             final author = state.listUsers?[index];
                             return _buildItemAuthor(
-                              author!.imageUrl,
-                              author!.username,
+                              author!.imageUrl ?? '',
+                              author!.username ?? '',
                               '1.2M Followers',
                               context,
                             );
@@ -157,84 +164,99 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
     String srcImage,
       BuildContext context
   ) {
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 0),
-      child: SizedBox(
-        height: 112,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8,8,4,8 ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  imageUrl,
-                  width: 96,
-                  height: 96,
-                  fit: BoxFit.cover,
-                ),
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8,8,4,8 ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                imageUrl,
+                width: 96,
+                height: 96,
+                fit: BoxFit.cover,
               ),
             ),
-
-            const SizedBox(width: 6),
-
-            // News Content
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      category,
-                      style: Theme.of(context).own()?.textTheme?.h2,
+          ),
+          // News Content
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    category,
+                    style: textTheme?.textXSmall
+                        ?.copyWith(
+                      color:
+                      colorSchema
+                          ?.grayscaleBodyText,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      title,
-                      style: Theme.of(context).own()?.textTheme?.h3,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            srcImage,
-                            width: 20,
-                            height: 20,
-                            fit: BoxFit.cover,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    title,
+                    style: textTheme?.textMedium
+                      ?.copyWith(
+                  color: colorSchema?.darkBlack,
+                  ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          srcImage,
+                          width: 20,
+                          height: 20,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        source,
+                          style: textTheme
+                              ?.textXSmallLink
+                              ?.copyWith(
+                            color:
+                            colorSchema
+                                ?.grayscaleBodyText,
                           ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        Icons.access_time,
+                        size: 12,
+                        color: Colors.grey.shade500,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        time,
+                        style: textTheme?.textXSmall
+                            ?.copyWith(
+                          color:
+                          colorSchema
+                              ?.grayscaleBodyText,
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          source,
-                          style: Theme.of(context).own()?.textTheme?.primary,
-                        ),
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.access_time,
-                          size: 12,
-                          color: Colors.grey.shade500,
-                        ),
-                        const SizedBox(width: 2),
-                        Text(
-                          time,
-                          style: Theme.of(context).own()?.textTheme?.medium,
-                        ),
-                        const Spacer(),
-                        Icon(Icons.more_horiz, color: Colors.grey.shade400),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                      const Spacer(),
+                      Icon(Icons.more_horiz, color: Colors.grey.shade400),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -246,10 +268,12 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
     String contextt,
     BuildContext context,
   ) {
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
     final topic = context.read<SearchBloc>().state.listTopics?.firstWhere((t) => t.id == index);
     final isSaved = topic?.save ?? false;
-    return SizedBox(
-      height: 86,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
         children: [
           SizedBox(width: 4.5),
@@ -263,7 +287,10 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: Theme.of(context).own()?.textTheme?.h3),
+                Text(title, style: textTheme?.textMedium?.copyWith(
+                  color: colorSchema?.darkBlack,
+                ),
+                ),
                 SizedBox(height: 4),
                 SizedBox(
                   width: 190,
@@ -271,7 +298,9 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                     contextt,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
-                    style: Theme.of(context).own()?.textTheme?.h2,
+                    style: textTheme?.textSmall?.copyWith(
+                      color: colorSchema?.grayscaleBodyText,
+                    ),
                   ),
                 ),
               ],
@@ -286,10 +315,10 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                 context.read<SearchBloc>().add(SearchEvent.changeSaveTopic(index));
               },
               style: TextButton.styleFrom(
-                backgroundColor: isSaved ? AppColors.blueee : AppColors.white,
+                backgroundColor: isSaved ? AppColors.blueRibbon : AppColors.white,
                 fixedSize: Size(78, 34),
-                foregroundColor: AppColors.blueee,
-                side: BorderSide(color: AppColors.blueee),
+                foregroundColor: AppColors.blueRibbon,
+                side: BorderSide(color: AppColors.blueRibbon),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -302,7 +331,7 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Poppins',
-                    color: isSaved ? AppColors.white : AppColors.blueee,
+                    color: isSaved ? AppColors.white : AppColors.blueRibbon,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -320,70 +349,73 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
     String followers,
     BuildContext context,
   ) {
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
     final author = context.read<SearchBloc>().state.listUsers?.firstWhere((u) => u.username == title);
     final isFollowed = author?.isFollow ?? false;
-    return SizedBox(
-      height: 86,
-      child: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
-            child: Image.asset(image, width: 70, height: 70),
+    return Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
+          child: Image.asset(image, width: 70, height: 70),
+        ),
+        Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(4, 18.5, 0, 18.5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: textTheme?.textMedium?.copyWith(
+                color: colorSchema?.darkBlack,
+              ),),
+              SizedBox(height: 4),
+              Text(followers, style: textTheme?.textSmall?.copyWith(
+                color: colorSchema?.grayscaleBodyText,
+              ),),
+            ],
           ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(4, 18.5, 0, 18.5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: Theme.of(context).own()?.textTheme?.h3),
-                SizedBox(height: 4),
-                Text(followers, style: Theme.of(context).own()?.textTheme?.h2),
-              ],
-            ),
-          ),
-          Spacer(),
-          SizedBox(
-            width: 95,
-            height: 32,
-            child: TextButton(
-              onPressed: () {
-                context.read<SearchBloc>().add(SearchEvent.changeFollowUser(title));
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: isFollowed ? AppColors.blueee : AppColors.white,
-                fixedSize: Size(78, 34),
-                foregroundColor: isFollowed ? AppColors.white : AppColors.blueee,
-                side: BorderSide(color: AppColors.blueee),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: EdgeInsets.zero,
+        ),
+        Spacer(),
+        SizedBox(
+          width: 95,
+          height: 32,
+          child: TextButton(
+            onPressed: () {
+              context.read<SearchBloc>().add(SearchEvent.changeFollowUser(title));
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: isFollowed ? AppColors.blueRibbon : AppColors.white,
+              fixedSize: Size(78, 34),
+              foregroundColor: isFollowed ? AppColors.white : AppColors.blueRibbon,
+              side: BorderSide(color: AppColors.blueRibbon),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (!isFollowed)
-                      Icon(Icons.add, color: AppColors.blueee),
-                    Text(
-                      isFollowed ? "Following" : "Follow",
-                      style: TextStyle(
-                        fontSize: isFollowed ? 14 : 16,
-                        fontFamily: 'Poppins',
-                        color: isFollowed ? AppColors.white : AppColors.blueee,
-                        fontWeight: FontWeight.w600,
-                      ),
+              padding: EdgeInsets.zero,
+            ),
+            child: Align(
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (!isFollowed)
+                    Icon(Icons.add, color: AppColors.blueRibbon),
+                  Text(
+                    isFollowed ? "Following" : "Follow",
+                    style: TextStyle(
+                      fontSize: isFollowed ? 14 : 16,
+                      fontFamily: 'Poppins',
+                      color: isFollowed ? AppColors.white : AppColors.blueRibbon,
+                      fontWeight: FontWeight.w600,
                     ),
+                  ),
 
-                  ],
-                ),
+                ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

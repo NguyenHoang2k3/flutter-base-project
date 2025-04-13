@@ -1,13 +1,17 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:flutter_clean_architecture/presentation/view/widgets/app_checkbox.dart';
+import 'package:flutter_clean_architecture/shared/extension/context.dart';
+import '../../../../gen/assets.gen.dart';
 import '../../../base/base_page.dart';
 import '../../../base/page_status.dart';
-import '../../../resources/colors.dart';
+import '../../../resources/locale_keys.dart';
 import '../../../router/router.dart';
+import '../../widgets/app_button.dart';
+import '../../widgets/app_form_field.dart';
+import '../../widgets/app_secure_form_field.dart';
 import 'login_bloc.dart';
 
 @RoutePage()
@@ -22,12 +26,8 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
 
   @override
   Widget builder(BuildContext context) {
-    final TextEditingController usernameController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-
-    ValueNotifier<String?> usernameError = ValueNotifier<String?>(null);
-    ValueNotifier<String?> passwordError = ValueNotifier<String?>(null);
-
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.pageStatus == PageStatus.Error &&
@@ -50,220 +50,134 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 24, 0, 0),
-                    child: SvgPicture.asset('assets/images/HelloAgain.svg'),
+                  Text(
+                    LocaleKeys.login_hello.tr(),
+                    style: textTheme?.textDisplayLargeBold?.copyWith(
+                      color: colorSchema?.grayscaleTitleactive,
+                    ),
+                  ),
+                  Text(
+                    LocaleKeys.login_again.tr(),
+                    style: textTheme?.textDisplayLargeBold?.copyWith(
+                      color: colorSchema?.primaryDefault,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Welcome back you\'ve\nbeen missed',
-                    style: Theme.of(context).own()?.textTheme?.h1,
+                    LocaleKeys.login_title.tr(),
+                    style: textTheme?.textLarge?.copyWith(
+                      color:Theme.of(context).brightness == Brightness.light ? colorSchema?.grayscaleBodyText : const Color(0xffB0B3B8),
+                    ),
                   ),
                   const SizedBox(height: 48),
-                  ValueListenableBuilder<String?>(
-                    valueListenable: usernameError,
-                    builder: (context, error, child) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Username',
-                                style: Theme.of(context).own()?.textTheme?.h2,
-                              ),
-                              Text('*', style: TextStyle(color: Colors.red)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          TextField(
-                            controller: usernameController,
-                            decoration: InputDecoration(
-                              fillColor: AppColors.white,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 14,
-                              ),
-                              errorText: error,
-                              suffixIcon: error != null
-                                  ? const Icon(Icons.error, color: Colors.red)
-                                  : null,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+                  AppFormField(
+                    label: LocaleKeys.login_label_username.tr(),
+                    isRequire: true,
                   ),
-            
                   const SizedBox(height: 16),
-                  ValueListenableBuilder<String?>(
-                    valueListenable: passwordError,
-                    builder: (context, error, child) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Password',
-                                style: Theme.of(context).own()?.textTheme?.h2,
-                              ),
-                              Text('*', style: TextStyle(color: Colors.red)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          TextField(
-                            controller: passwordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              fillColor: AppColors.white,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 14,
-                              ),
-                              errorText: error,
-                                suffixIcon: IconButton(
-                                  icon: SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: Image.asset("assets/images/Icon.png"),
-                                  ),
-                                  onPressed: () {},
-                                ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+                  AppSecureFormField(
+                    label: LocaleKeys.login_label_password.tr(),
+                    isRequired: true,
                   ),
+                  SizedBox(height: 8,),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const SizedBox(width: 2),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: 18,
-                          height: 18,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3),
-                            shape: BoxShape.rectangle,
-                            color: true ? Colors.blue : Colors.transparent,
-                          ),
-                          child:
-                              true
-                                  ? const Icon(
-                                    Icons.check,
-                                    size: 14,
-                                    color: Colors.white,
-                                  )
-                                  : null,
+                    AppCheckBox(
+                      borderColor: Theme.of(context).brightness == Brightness.light ? colorSchema?.grayscaleBodyText : colorSchema?.darkmodeBody,
+                      size: CheckBoxSize.normal,
+                      checkedColor: colorSchema?.primaryDefault,
+                      value: true,
+                    ),
+                      const SizedBox(width: 4),
+                      Text(
+                        LocaleKeys.login_checkbox_remember.tr(),
+                        style: textTheme?.textSmall?.copyWith(
+                          color: colorSchema?.grayscaleBodyText,
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      Spacer(),
                       Text(
-                        'Remember me',
-                        style: Theme.of(context).own()?.textTheme?.h2,
-                      ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Forgot the password?',
-                          style: TextStyle(color: AppColors.bluee, fontSize: 14),
+                        LocaleKeys.login_forgot_password.tr(),
+                        style: textTheme?.textSmall?.copyWith(
+                          color: colorSchema?.primaryDefault,
                         ),
                       ),
                     ],
                   ),
+                  SizedBox(height: 16,),
                   SizedBox(
                     width: 379,
                     height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final username = usernameController.text.trim();
-                        final password = passwordController.text.trim();
-            
-                        if (username.isEmpty) {
-                          usernameError.value = 'Invalid Username';
-                        } else {
-                          usernameError.value = null;
-                        }
-            
-                        if (password.isEmpty) {
-                          passwordError.value = 'Invalid Password';
-                        } else {
-                          passwordError.value = null;
-                        }
-                        if (usernameError.value == null &&
-                            passwordError.value == null) {
-                          context.read<LoginBloc>().add(
-                            LoginEvent.login(
-                              username: username,
-                              password: password,
-                            ),
-                          );
-                        }
+                    child:  AppButton.primary(
+                      height: 50,
+                      backgroundColor: colorSchema?.primaryDefault,
+                      title: LocaleKeys.login_login_button.tr(),
+                      titleStyle: textTheme?.textMediumLink,
+                      onPressed:
+                          () => {
+                            context.router.push(HomeRoute())
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.blueee,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Center(
                     child: Text(
-                      'or continue with',
-                      style: Theme.of(context).own()?.textTheme?.h2,
+                      LocaleKeys.login_continue_with_label.tr(),
+                      style: textTheme?.textSmall?.copyWith(
+                        color: colorSchema?.grayscaleBodyText,
+                    ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: _socialLoginButton(
-                          icon: 'assets/images/facebook.svg',
-                          label: 'Facebook',
+                        child: AppButton.primary(
+                          height: 48,
+                          backgroundColor:
+                          colorSchema?.grayscaleSecondaryButton,
+                          title: LocaleKeys.login_facebook_button.tr(),
+                          titleStyle: textTheme?.textMediumLink?.copyWith(
+                            color: const Color(0xff667080),
+                          ),
                           onPressed: () {},
+                          icon: Assets.icons.facebook.svg(),
                         ),
                       ),
-                      SizedBox(width: 31,),
+                      const SizedBox(width: 31),
                       Expanded(
-                        child: _socialLoginButton(
-                          icon: 'assets/images/google.svg',
-                          label: 'Google',
-                          onPressed: () {},
+                        child: AppButton.primary(
+                          backgroundColor:
+                          colorSchema?.grayscaleSecondaryButton,
+                          title: LocaleKeys.login_google_button.tr(),
+                          titleStyle: textTheme?.textMediumLink?.copyWith(
+                            color:const Color(0xff667080),
+                          ),
+                          onPressed: () {
+                          },
+                          icon: Assets.icons.goggleIcon.svg(),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Center(
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Don\'t have an account? ',
-                        style: Theme.of(context).own()?.textTheme?.h2,
-                        children: [
-                          TextSpan(
-                            text: 'Sign Up',
-                            style: const TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        LocaleKeys.login_don_have_account_label.tr(),
+                        style: textTheme?.textSmall?.copyWith(
+                          color: colorSchema?.grayscaleBodyText,
+                        ),
                       ),
-                    ),
+                      Text(
+                        LocaleKeys.login_sign_up.tr(),
+                        style: textTheme?.textSmallLink?.copyWith(
+                          color: colorSchema?.primaryDefault,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -271,37 +185,6 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
           ),
         );
       },
-    );
-  }
-
-  Widget _socialLoginButton({
-    required String icon,
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: Colors.white),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        backgroundColor: Colors.grey[100],
-        minimumSize: Size.fromHeight(50)
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(width: 21, height: 21, child: SvgPicture.asset(icon)),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
-              color: AppColors.grayScalee,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

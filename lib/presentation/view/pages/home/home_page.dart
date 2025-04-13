@@ -1,11 +1,15 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/router/router.dart';
-import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
+import 'package:flutter_clean_architecture/shared/extension/context.dart';
+import '../../../../gen/assets.gen.dart';
 import '../../../base/base_page.dart';
 import '../../../base/page_status.dart';
 import '../../../resources/colors.dart';
+import '../../../resources/locale_keys.dart';
+import '../../widgets/app_form_field.dart';
 import 'home_bloc.dart';
 
 @RoutePage()
@@ -20,13 +24,14 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
 
   @override
   Widget builder(BuildContext context) {
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
     return DefaultTabController(
       length: categories.length,
       child: Stack(
         children: [
           Scaffold(
             bottomNavigationBar: BottomNavigationBar(
-
               currentIndex: 0,
               onTap: (index) {
                 switch (index) {
@@ -56,38 +61,35 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                        child: TextField(
-                          onTap: () => context.router.push(const SearchRoute()),
+                        child: AppFormField(
+                          readOnly: true,
                           decoration: InputDecoration(
-                            fillColor: AppColors.white,
-                            hintText: "Search",
-                            hintStyle: TextStyle(color: AppColors.a),
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Image.asset('assets/images/search.png', width: 20, height: 20),
-                              ),
+                            hintText:
+                            LocaleKeys.home_home_search_hint
+                                .tr(),
+                            prefixIcon: Assets.icons.search.svg(
+                              fit: BoxFit.scaleDown,
+                              color: Theme.of(context).iconTheme.color,
                             ),
                             suffixIcon: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Image.asset('assets/images/ho.png', width: 20, height: 20),
+                              padding: const EdgeInsets.only(
+                                right: 12,
+                              ),
+                              child: Assets.icons.threeLine.svg(
+                                color: Theme.of(context).iconTheme.color,
                               ),
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(color: AppColors.grayScale),
-                            ),
                           ),
+                          onTap:
+                              () =>
+                              context.pushRoute(SearchRoute()),
                         ),
                       ),
                     ),
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: _sectionHeader(context, 'Trending'),
+                        child: _sectionHeader(context, LocaleKeys.home_home_trending.tr()),
                       ),
                     ),
                     SliverToBoxAdapter(
@@ -97,34 +99,58 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                           if (newsList.isEmpty) return SizedBox.shrink();
                           final news = newsList[0];
                           return GestureDetector(
-                            onTap: () => context.router.push(DetailNewsRoute(newsId: news.id)),
+                            onTap: () => context.router.push(DetailNewsRoute(newsId: news.id??'')),
                             child: Padding(
                               padding: const EdgeInsets.all(24.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.asset(news.imageUrl),
+                                  Image.asset(news.imageUrl??''),
                                   const SizedBox(height: 8),
-                                  Text(news.source, style: Theme.of(context).own()?.textTheme?.title),
+                                  Text(news.source??'', style: textTheme?.textXSmall
+                                      ?.copyWith(
+                                      color:
+                                      colorSchema
+                                          ?.grayscaleBodyText)),
                                   const SizedBox(height: 4),
                                   Text(
-                                    news.title,
-                                    style: Theme.of(context).own()?.textTheme?.h3,
+                                    news.title??'',
+                                    style: textTheme?.textMedium
+                                        ?.copyWith(
+                                      color: colorSchema?.darkBlack,
+                                    ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 4),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: Image.asset(news.srcImage, width: 20, height: 20),
+                                      Row(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(8),
+                                            child: Image.asset(news.srcImage??'', width: 20, height: 20),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(news.category??'', style: textTheme
+                                              ?.textXSmallLink
+                                              ?.copyWith(
+                                            color:
+                                            colorSchema
+                                                ?.grayscaleBodyText,
+                                          ),),
+                                          const SizedBox(width: 8),
+                                          Icon(Icons.access_time, size: 12, color: Theme.of(context).iconTheme.color),
+                                          const SizedBox(width: 2),
+                                          Text(news.time??'', style: textTheme?.textXSmall
+                                              ?.copyWith(
+                                            color:
+                                            colorSchema
+                                                ?.grayscaleBodyText,
+                                          ),),
+                                        ],
                                       ),
-                                      const SizedBox(width: 4),
-                                      Text(news.category, style: Theme.of(context).own()?.textTheme?.primary),
-                                      const SizedBox(width: 8),
-                                      Icon(Icons.access_time, size: 12, color: Colors.grey.shade500),
-                                      const SizedBox(width: 2),
-                                      Text(news.time, style: Theme.of(context).own()?.textTheme?.title),
+                                      Assets.icons.threedot.svg(),
                                     ],
                                   ),
                                 ],
@@ -145,16 +171,22 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                       delegate: _TabBarDelegate(
                         TabBar(
                           isScrollable: true,
-                          indicatorColor: AppColors.blueee,
+                          indicatorColor: colorSchema?.primaryDefault,
                           indicatorWeight: 2.0,
-                            indicatorSize: TabBarIndicatorSize.label,
+                          indicatorSize: TabBarIndicatorSize.label,
                           indicatorPadding: EdgeInsets.only(bottom: 6),
                           tabs: categories.map((e) => Tab(text: e)).toList(),
                           labelPadding: EdgeInsets.symmetric(horizontal: 5),
-                          labelColor: AppColors.black,
-                          unselectedLabelColor: AppColors.grayScale,
-                          labelStyle: Theme.of(context).own()?.textTheme?.h3,
-                          unselectedLabelStyle: Theme.of(context).own()?.textTheme?.small,
+                          labelColor: colorSchema?.darkTab,
+                          unselectedLabelColor: AppColors.grayscaleButtonText,
+                          labelStyle: textTheme?.textMedium,
+                          unselectedLabelStyle: textTheme
+                              ?.textMedium
+                              ?.copyWith(
+                            color:
+                            colorSchema
+                                ?.grayscaleBodyText,
+                          ),
                         ),
                       ),
                     ),
@@ -174,7 +206,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                             separatorBuilder: (_, __) => SizedBox(height: 16),
                             itemBuilder: (context, index) {
                               final news = list[index];
-                              return InkWell(onTap: () => context.router.push(DetailNewsRoute(newsId: news.id)),child: _buildItem(news, context));
+                              return InkWell(onTap: () => context.router.push(DetailNewsRoute(newsId: news.id??'')),child: _buildItem(news, context));
                             },
                           );
                         },
@@ -205,7 +237,10 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).brightness ==
+                            Brightness.light
+                            ? Colors.white
+                            : colorSchema?.darkmodeInputBackground,
                         borderRadius: BorderRadius.circular(6),
                         boxShadow: [
                           BoxShadow(
@@ -218,6 +253,7 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                       child: Center(
                         child: Image.asset(
                           'assets/images/notii.png',
+                          color: colorSchema?.iconWhite,
                           width: 18,
                           height: 21.5,
                         ),
@@ -234,19 +270,28 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
   }
 
   Widget _sectionHeader(BuildContext context, String title) {
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
     return SizedBox(
       height: 24,
       child: Row(
         children: [
-          Text(title, style: Theme.of(context).own()?.textTheme?.highlightsMedium),
+          Text(title, style:  textTheme?.textMediumLink
+              ?.copyWith(
+            color: colorSchema?.darkBlack,
+          )),
           const Spacer(),
-          Text('See all', style: Theme.of(context).own()?.textTheme?.h2),
+          Text('See all', style: textTheme?.textSmall?.copyWith(
+              color:
+              colorSchema?.grayscaleBodyText)),
         ],
       ),
     );
   }
 
   Widget _buildItem(news, BuildContext context) {
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -259,9 +304,17 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(news.category, style: Theme.of(context).own()?.textTheme?.h2),
+              Text(news.category, style:  textTheme?.textXSmall
+                  ?.copyWith(
+                color:
+                colorSchema
+                    ?.grayscaleBodyText,
+              ),),
               const SizedBox(height: 4),
-              Text(news.title, style: Theme.of(context).own()?.textTheme?.h3, maxLines: 2, overflow: TextOverflow.ellipsis),
+              Text(news.title, style: textTheme?.textMedium
+                  ?.copyWith(
+                color: colorSchema?.darkBlack,
+              ), maxLines: 2, overflow: TextOverflow.ellipsis),
               const SizedBox(height: 4),
               Row(
                 children: [
@@ -270,11 +323,22 @@ class HomePage extends BasePage<HomeBloc, HomeEvent, HomeState> {
                     child: Image.asset(news.srcImage, width: 20, height: 20, fit: BoxFit.cover),
                   ),
                   const SizedBox(width: 4),
-                  Text(news.source, style: Theme.of(context).own()?.textTheme?.primary),
+                  Text(news.source, style: textTheme
+                      ?.textXSmallLink
+                      ?.copyWith(
+                    color:
+                    colorSchema
+                        ?.grayscaleBodyText,
+                  ),),
                   const SizedBox(width: 8),
                   Icon(Icons.access_time, size: 12, color: Colors.grey.shade500),
                   const SizedBox(width: 2),
-                  Text(news.time, style: Theme.of(context).own()?.textTheme?.title),
+                  Text(news.time, style: textTheme?.textXSmall
+                      ?.copyWith(
+                    color:
+                    colorSchema
+                        ?.grayscaleBodyText,
+                  ),),
                   const Spacer(),
                   Icon(Icons.more_horiz, color: Colors.grey.shade400),
                 ],
@@ -295,7 +359,7 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(context, shrinkOffset, overlapsContent) {
     return Container(
-      color: Colors.white,
+      color: context.themeOwn().colorSchema?.white,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: tabBar,
     );

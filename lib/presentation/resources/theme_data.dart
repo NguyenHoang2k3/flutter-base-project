@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppThemeData {
-  AppThemeData({this.textTheme, this.colorSchema});
+  AppThemeData({
+    this.textTheme,
+    this.colorSchema,
+  });
 
   final AppTextTheme? textTheme;
   final AppColorSchema? colorSchema;
@@ -24,6 +27,7 @@ class AppTextTheme {
     this.textMediumLink,
     this.textLargeLink,
 
+
     this.h1,
     this.h2,
     this.h3,
@@ -39,20 +43,6 @@ class AppTextTheme {
     this.title3,
   });
 
-  final TextStyle? h1;
-  final TextStyle? h2;
-  final TextStyle? h3;
-  final TextStyle? primary;
-  final TextStyle? medium;
-  final TextStyle? small;
-  final TextStyle? highlightsMedium;
-  final TextStyle? highlightsBold;
-  final TextStyle? button;
-  final TextStyle? title;
-  final TextStyle? header;
-  final TextStyle? title2;
-  final TextStyle? title3;
-
   final TextStyle? textSmall;
   final TextStyle? textXSmall;
   final TextStyle? textMedium;
@@ -67,13 +57,45 @@ class AppTextTheme {
   final TextStyle? textXSmallLink;
   final TextStyle? textMediumLink;
   final TextStyle? textLargeLink;
+
+
+  final TextStyle? h1;
+  final TextStyle? h2;
+  final TextStyle? h3;
+  final TextStyle? primary;
+  final TextStyle? medium;
+  final TextStyle? small;
+  final TextStyle? highlightsMedium;
+  final TextStyle? highlightsBold;
+  final TextStyle? button;
+  final TextStyle? title;
+  final TextStyle? header;
+  final TextStyle? title2;
+  final TextStyle? title3;
+
 }
 
 class AppColorSchema {
-  AppColorSchema( {
+  AppColorSchema({
+    this.primary,
+    this.mainText,
+    this.subText,
+    this.whiteText,
+    this.disableText,
+    this.border,
+    this.background,
+    this.barrierColor,
+    this.secondary1,
+    this.secondary2,
+    this.secondary3,
+    this.secondary4,
+    this.badgeColor,
+    this.title2,
+
+
+    this.darkBlack,
     this.successDefault,
     this.successDark,
-    this.darkBlack,
     this.successDarkmode,
     this.successLight,
     this.errorDefault,
@@ -94,26 +116,9 @@ class AppColorSchema {
     this.darkmodeBackground,
     this.darkmodeTitle,
     this.darkmodeBody,
-    this.darkmodeInputBackground,
-    this.iconWhite,
-
-    this.primary,
-    this.mainText,
-    this.subText,
-    this.whiteText,
-    this.disableText,
-    this.border,
-    this.background,
-    this.barrierColor,
-    this.secondary1,
-    this.secondary2,
-    this.secondary3,
-    this.secondary4,
-    this.badgeColor,
-    this.title2,
-    this.c1,
-    this.c2,
-    this.c3,
+    this.darkmodeInputBackground, this.iconWhite,
+    this.white,
+    this.darkTab
   });
 
   final Color? primary;
@@ -130,9 +135,6 @@ class AppColorSchema {
   final Color? barrierColor;
   final Color? badgeColor;
   final Color? title2;
-  final Color? c1;
-  final Color? c2;
-  final Color? c3;
 
   final Color? successDefault;
   final Color? successDark;
@@ -159,4 +161,7 @@ class AppColorSchema {
   final Color? darkmodeBody;
   final Color? darkmodeInputBackground;
   final Color? iconWhite;
+  final Color? white;
+  final Color? darkTab;
+
 }

@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_clean_architecture/domain/entities/users.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'notification.g.dart';
@@ -7,6 +8,7 @@ part 'notification.g.dart';
 class Notification {
   String notificationId;
   String imagePath;
+  Users users;
   String message;
   DateTime timeNotify;
   String typeNotification;
@@ -14,6 +16,7 @@ class Notification {
   Notification(
       this.notificationId,
       this.imagePath,
+      this.users,
       this.message,
       this.timeNotify,
       this.typeNotification,

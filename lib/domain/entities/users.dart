@@ -1,45 +1,59 @@
 import 'package:equatable/equatable.dart';
-
-
+import 'package:json_annotation/json_annotation.dart';
+part 'users.g.dart';
+@JsonSerializable()
 class Users extends Equatable {
-
-  Users({
-    required this.id,
-    required this.username,
-    required this.email,
-    required this.imageUrl,
-    required this.password,
-    this.isFollow = false,
-  });
-
+  Users(
+      this.id,
+      this.username,
+      this.email,
+      this.imageUrl,
+      this.password,
+      this.followers,
+      this.isFollow,
+      );
 
   final String? id;
-  final String username;
+  final String? username;
   final String? email;
-  final String imageUrl;
+  final String? imageUrl;
   final String? password;
+  final int? followers;
   bool isFollow;
 
   Users copyWith({
-    final String? id,
+    String? id,
     String? username,
-    final String? email,
+    String? email,
     String? imageUrl,
-    final String? password,
+    String? password,
+    int? followers,
     bool? isFollow,
   }) {
     return Users(
-      id: id ?? this.id,
-      username: username ?? this.username,
-      email: email ?? this.email,
-      imageUrl: imageUrl ?? this.imageUrl,
-      password: password ?? this.password,
-      isFollow: isFollow ?? this.isFollow,
+      id ?? this.id,
+      username ?? this.username,
+      email ?? this.email,
+      imageUrl ?? this.imageUrl,
+      password ?? this.password,
+      followers ?? this.followers,
+      isFollow ?? this.isFollow,
     );
   }
 
-
-
   @override
-  List<Object?> get props => [id, username, email, password,imageUrl];
+  List<Object?> get props => [
+    id,
+    username,
+    email,
+    password,
+    imageUrl,
+    followers,
+    isFollow,
+  ];
+  factory Users.fromJson(Map<String, dynamic> json) =>
+      _$UsersFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UsersToJson(this);
+
 }

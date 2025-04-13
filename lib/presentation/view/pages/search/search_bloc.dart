@@ -115,7 +115,7 @@ class SearchBloc extends BaseBloc<SearchEvent, SearchState> {
     final prefs = await SharedPreferences.getInstance();
     final followedUsers = prefs.getStringList('followedUsers') ?? [];
     if (user.isFollow) {
-      followedUsers.add(user.username);
+      followedUsers.add(user.username??'');
     } else {
       followedUsers.remove(user.username);
     }

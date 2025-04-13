@@ -84,7 +84,7 @@ class EditProfilePage
                           },
                           child: Icon(
                             Icons.clear,
-                            color: AppColors.grayScale,
+                            color: AppColors.gray76,
                           ),
                         ),
                         Text(

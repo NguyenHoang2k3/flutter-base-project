@@ -7,6 +7,7 @@ class UserRespone {
   final String? username;
   final String? password;
   final String? imageUrl;
+  final String? followers;
   final String? isFollow;
 
   UserRespone({
@@ -15,6 +16,7 @@ class UserRespone {
     required this.username,
     required this.password,
     required this.imageUrl,
+    required this.followers,
     required this.isFollow,
   });
 

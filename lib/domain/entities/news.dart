@@ -12,23 +12,26 @@ class News extends Equatable {
     required this.time,
     required this.imageUrl,
     required this.srcImage,
-    this.context, this.comment, this.like, this.saved,
+    required this.context,
+    required this.comment,
+    required this.like,
+    required this.saved,
     required this.users,
   });
 
 
-  final String id;
-  final String category;
-  final String title;
-  final String source;
-  final String time;
-  final String imageUrl;
-  final String srcImage;
+  final String? id;
+  final String? category;
+  final String? title;
+  final String? source;
+  final String? time;
+  final String? imageUrl;
+  final String? srcImage;
   final String? context;
   final int? comment;
   final int? like;
   final bool? saved;
-  final Users users;
+  final Users? users;
 
 
 

@@ -1,7 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_clean_architecture/presentation/resources/colors.dart';
+import 'package:flutter_clean_architecture/shared/extension/context.dart';
+import 'package:flutter_clean_architecture/shared/extension/datetime.dart';
+import 'package:gap/gap.dart';
+
+import '../../../../domain/entities/notification.dart' as entity;
+import '../../../../gen/assets.gen.dart';
 import '../../../base/base_page.dart';
 import 'notification_bloc.dart';
 
@@ -18,201 +23,202 @@ class NotificationPage
 
   @override
   Widget builder(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            label: 'Explore',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_border_outlined),
-            label: 'Bookmark',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: 0,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {},
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 24,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          context.router.pop();
-                        },
-
-                        child: Image.asset(
-                          'assets/images/back.png',
-                          width: 24,
-                          height: 24,
-                        ),
-                      ),
-                      const Text(
-                        'Notification',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      Image.asset(
-                        'assets/images/dotY.png',
-                        width: 24,
-                        height: 24,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Today, April 22',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-                const SizedBox(height: 8,),
-                buildNotification(
-                    'assets/images/bbc.png',
-                    'BBC News',
-                    'has posted new europe news "Ukraines President Zele"',
-                    '15m ago'
-                ),
-                buildNotification(
-                    'assets/images/bbc.png',
-                    'BBC News',
-                    'has posted new europe news "Ukraines President Zele"',
-                    '15m ago'
-                ),
-                buildNotification(
-                    'assets/images/bbc.png',
-                    'BBC News',
-                    'has posted new europe news "Ukraines President Zele"',
-                    '15m ago'
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Today, April 22',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-                const SizedBox(height: 8,),
-                buildNotification(
-                    'assets/images/bbc.png',
-                    'BBC News',
-                    'has posted new europe news "Ukraines President Zele"',
-                    '15m ago'
-                ),
-                buildNotification(
-                    'assets/images/bbc.png',
-                    'BBC News',
-                    'has posted new europe news "Ukraines President Zele"',
-                    '15m ago'
-                ),
-                buildNotification(
-                    'assets/images/bbc.png',
-                    'BBC News',
-                    'has posted new europe news "Ukraines President Zele"',
-                    '15m ago'
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildNotification(String categoryImage, String category, String context, String time) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-      child: SizedBox(
-        height: 99,
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.grayScaleButton,
-            borderRadius: BorderRadius.circular(10), // Bo góc
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: 8,),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(categoryImage, width: 70, height: 70),
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
+    final iconColor =Theme.of(context).iconTheme.color;
+    return BlocBuilder<NotificationBloc, NotificationState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            shadowColor: Colors.transparent,
+            leading: IconButton(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.zero,
+              onPressed: context.pop,
+              icon: Padding(
+                padding: const EdgeInsets.only(left: 24),
+                child: Assets.icons.backIcon.svg(color: iconColor),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 14, 8, 14),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: category,
-                              style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.grayScaleTitle,
-                              ),
-                            ),
-                            TextSpan(
-                              text: ' $context',
-                              style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 16, // Fixed font size typo (was 166)
-                                color: AppColors.grayScaleTitle,
-                              ),
-                            ),
-                          ],
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      Text(
-                        time,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: AppColors.grayScale,
-                          fontFamily: 'Poppins',
-                        ),
-                      ),
-                    ],
-                  ),
+            ),
+            title: Text(
+              'Notification',
+              style: textTheme?.textMediumLink?.copyWith(
+                color: colorSchema?.darkBlack,
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: PopupMenuButton<String>(
+                  icon: Assets.icons.threedotVertical.svg(color: iconColor),
+                  onSelected: (value) {
+                    print("Selected: $value");
+                  },
+                  itemBuilder:
+                      (context) => [
+                    PopupMenuItem(value: "Settings", child: Text("Settings")),
+                    PopupMenuItem(value: "Logout", child: Text("Logout")),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
-      ),
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: state.listNotificatioFollowDay?.length,
+                  itemBuilder: (context, index) {
+                    final entry = state.listNotificatioFollowDay?.entries
+                        .elementAt(index);
+                    final List<entity.Notification> subList = entry?.value ?? [];
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 24, left: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            subList[0].notifyDay(),
+                            style: textTheme?.textMediumLink?.copyWith(
+                              color: colorSchema?.darkBlack,
+                            ),
+                          ),
+                          const Gap(16),
+                          Column(
+                            children:
+                            subList.map((notification) {
+                              return Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).brightness == Brightness.light ? colorSchema
+                                          ?.grayscaleSecondaryButton : colorSchema?.darkmodeInputBackground,
+                                      borderRadius: BorderRadius.circular(
+                                        6,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                        horizontal: 8,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 70,
+                                            height: 70,
+                                            child: ClipOval(
+                                              child: Image.asset(
+                                                notification.imagePath,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          Gap(16),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Text.rich(
+                                                  maxLines: 2,
+                                                  softWrap: true,
+                                                  overflow:
+                                                  TextOverflow
+                                                      .ellipsis,
+                                                  TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text:
+                                                        notification
+                                                            .users
+                                                            .username,
+                                                        style: textTheme
+                                                            ?.textMediumLink
+                                                            ?.copyWith(
+                                                          color:
+                                                          colorSchema
+                                                              ?.grayscaleTitleactive,
+                                                        ),
+                                                      ),
+                                                      const TextSpan(
+                                                        text: ' ',
+                                                      ),
+                                                      TextSpan(
+                                                        text:
+                                                        notification
+                                                            .message,
+                                                        style: textTheme
+                                                            ?.textMedium
+                                                            ?.copyWith(
+                                                          color:
+                                                          colorSchema
+                                                              ?.grayscaleTitleactive,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Text(
+                                                  notification.timeNotify.getDayAgo(),
+                                                  style: textTheme
+                                                      ?.textXSmall
+                                                      ?.copyWith(
+                                                    color:
+                                                    colorSchema
+                                                        ?.grayscaleBodyText,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+
+                                          if (notification.typeNotification == "follow") Padding(
+                                            padding: const EdgeInsets.only(left: 16),
+                                            child: InkWell(
+                                              onTap: () {
+                                                context
+                                                    .read<
+                                                    NotificationBloc
+                                                >()
+                                                    .add(
+                                                  NotificationEvent.changeFollowed(
+                                                    notification
+                                                        .users
+                                                        .id ?? '',
+                                                  ),
+                                                );
+                                              },
+                                              child:
+                                              notification.users.isFollow
+                                                  ? Assets.icons.following.svg() : Assets.icons.followIcon.svg(),
+                                            ),
+                                          ) else const SizedBox.shrink(),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const Gap(16),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

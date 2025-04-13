@@ -172,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: ElevatedButton.styleFrom(
                                 textStyle: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
-                                backgroundColor: AppColors.blueee,
+                                backgroundColor: AppColors.blueRibbon,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -190,7 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: ElevatedButton.styleFrom(
                                 textStyle: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
-                                backgroundColor: AppColors.blueee,
+                                backgroundColor: AppColors.blueRibbon,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -213,9 +213,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Align(
                                 alignment: Alignment.center,
                                 child: TabBar(
-                                  indicatorColor: AppColors.blueee,
+                                  indicatorColor: AppColors.blueRibbon,
                                   labelColor: Colors.black,
-                                  unselectedLabelColor: AppColors.grayScale,
+                                  unselectedLabelColor: AppColors.gray76,
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16,
@@ -235,7 +235,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   indicator: BoxDecoration(
                                     border: Border(
                                       bottom: BorderSide(
-                                          color: AppColors.blueee, width: 4),
+                                          color: AppColors.blueRibbon, width: 4),
                                     ),
                                   ),
                                   tabs: [

@@ -43,7 +43,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
                 id: user.id ?? '',
                 fullName: '',
                 imagePath: user.imageUrl,
-                username: user.username,
+                username: user.username??'',
                 email: user.email ?? '',
                 phoneNumber: '',
                 bio: null,

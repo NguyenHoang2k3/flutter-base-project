@@ -13,7 +13,7 @@ class AppButton extends StatelessWidget {
     this.enable = true,
     this.minWidth,
     this.height = 0,
-    this.backgroundColor = Colors.transparent,
+    this.backgroundColor =  Colors.transparent,
     this.prefixIcon,
     this.suffixIcon,
     this.borderRadius = 6,
@@ -32,6 +32,7 @@ class AppButton extends StatelessWidget {
     Color? backgroundColor,
     double borderRadius,
     Widget? icon,
+    double? height,
   }) = _AppButtonPrimary;
 
   factory AppButton.outline({
@@ -67,7 +68,8 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final border = borderColor != null && enable
+    final border =
+    borderColor != null && enable
         ? BorderSide(color: borderColor!, width: 1)
         : BorderSide.none;
     if (isIconButton) {
@@ -90,8 +92,10 @@ class AppButton extends StatelessWidget {
           onPressed: enable ? onPressed : null,
           borderRadius: BorderRadius.circular(borderRadius),
           child: Container(
-            constraints:
-                BoxConstraints(minWidth: minWidth ?? 0, minHeight: height),
+            constraints: BoxConstraints(
+              minWidth: minWidth ?? 0,
+              minHeight: enable ? height : 48,
+            ),
             padding: padding,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -114,22 +118,23 @@ class _AppButtonPrimary extends AppButton {
     required String title,
     TextStyle? titleStyle,
     required super.onPressed,
-    double borderRadius = 12,
+    double borderRadius = 6,
     Color? backgroundColor,
     bool enable = true,
     Widget? icon,
+    double? height,
   }) : super(
-          child: _AppButtonPrimaryChild(
-            title: title,
-            icon: icon,
-            titleStyle: titleStyle,
-          ),
-          enable: enable,
-          height: 40,
-          backgroundColor: backgroundColor ?? AppColors.denim,
-          minWidth: double.infinity,
-          borderRadius: borderRadius,
-        );
+    child: _AppButtonPrimaryChild(
+      title: title,
+      icon: icon,
+      titleStyle: titleStyle,
+    ),
+    enable: enable,
+    height: height ?? 48,
+    backgroundColor: backgroundColor ?? AppColors.grayscaleSecondaryButton,
+    minWidth: double.infinity,
+    borderRadius: borderRadius,
+  );
 }
 
 class _AppButtonPrimaryChild extends StatelessWidget {
@@ -147,8 +152,8 @@ class _AppButtonPrimaryChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themOwn = context.themeOwn();
-    final _titleStyle = themOwn.textTheme?.highlightsBold
-        ?.copyWith(color: themOwn.colorSchema?.whiteText)
+    final _titleStyle = themOwn.textTheme?.textMediumLink
+        ?.copyWith(color: themOwn.colorSchema?.grayscaleWhite)
         .merge(titleStyle);
     return Row(
       children: [
@@ -166,21 +171,18 @@ class _AppButtonMini extends AppButton {
     required VoidCallback onPressed,
     bool enable = true,
   }) : super(
-          child: _AppButtonMiniChild(title: title),
-          onPressed: onPressed,
-          borderRadius: 6,
-          backgroundColor: AppColors.denim,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          height: 34,
-          enable: enable,
-        );
+    child: _AppButtonMiniChild(title: title),
+    onPressed: onPressed,
+    borderRadius: 6,
+    backgroundColor: AppColors.denim,
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    height: 34,
+    enable: enable,
+  );
 }
 
 class _AppButtonMiniChild extends StatelessWidget {
-  const _AppButtonMiniChild({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
+  const _AppButtonMiniChild({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -189,8 +191,9 @@ class _AppButtonMiniChild extends StatelessWidget {
     final themOwn = context.themeOwn();
     return Text(
       title,
-      style: themOwn.textTheme?.button
-          ?.copyWith(color: themOwn.colorSchema?.whiteText),
+      style: themOwn.textTheme?.button?.copyWith(
+        color: themOwn.colorSchema?.whiteText,
+      ),
     );
   }
 }
@@ -202,33 +205,29 @@ class _AppButtonIcon extends AppButton {
     bool enable = true,
     EdgeInsets padding = EdgeInsets.zero,
   }) : super(
-          backgroundColor: Colors.transparent,
-          height: 0,
-          isIconButton: true,
-          enable: enable,
-          padding: padding,
-        );
+    backgroundColor: Colors.transparent,
+    height: 0,
+    isIconButton: true,
+    enable: enable,
+    padding: padding,
+  );
 }
 
 class _AppButtonOutline extends AppButton {
-  _AppButtonOutline({
-    required String title,
-    required super.onPressed,
-  }) : super(
-          child: _AppButtonOutlineChild(title: title),
-          backgroundColor: Colors.transparent,
-          borderColor: AppColors.pattensBlue,
-          borderRadius: 12,
-          height: 40,
-          minWidth: double.infinity,
-        );
+  _AppButtonOutline({required String title, required super.onPressed})
+      : super(
+    child: _AppButtonOutlineChild(title: title),
+    backgroundColor: Colors.transparent,
+    borderColor: AppColors.pattensBlue,
+    borderRadius: 12,
+    height: 40,
+    minWidth: double.infinity,
+  );
 }
 
 class _AppButtonOutlineChild extends StatelessWidget {
-  const _AppButtonOutlineChild({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
+  const _AppButtonOutlineChild({Key? key, required this.title})
+      : super(key: key);
 
   final String title;
 

@@ -23,7 +23,10 @@ class NewsRespone {
     required this.time,
     required this.imageUrl,
     required this.srcImage,
-    this.context, this.comment, this.like, this.saved,
+    required this.context,
+    required this.comment,
+    required this.like,
+    required this.saved,
   });
 
   factory NewsRespone.fromJson(Map<String, dynamic> json) => _$NewsResponeFromJson(json);

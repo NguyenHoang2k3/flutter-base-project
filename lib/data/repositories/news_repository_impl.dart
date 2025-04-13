@@ -31,7 +31,7 @@ class NewsRepositoryImpl extends NewsRepository {
 
     List<Users> filterdUser = response.map((e) => e.toEntity()).toList()
         .where((user) =>
-        user.username.trim().toLowerCase().contains(key.trim().toLowerCase()))
+        (user.username??'').trim().toLowerCase().contains(key.trim().toLowerCase()))
         .toList();
         return filterdUser;
   }
@@ -41,7 +41,7 @@ class NewsRepositoryImpl extends NewsRepository {
 
     List<News> filterdNews = response.map((e) => e.toEntity()).toList()
         .where((news) =>
-        news.title.trim().toLowerCase().contains(key.trim().toLowerCase()))
+    (news.title??'').trim().toLowerCase().contains(key.trim().toLowerCase()))
         .toList();
     return filterdNews;
   }
@@ -54,7 +54,7 @@ class NewsRepositoryImpl extends NewsRepository {
 
     try {
       return newsList.firstWhere(
-            (news) => news.id.trim().toLowerCase() == id.trim().toLowerCase(),
+            (news) => (news.id??'').trim().toLowerCase() == id.trim().toLowerCase(),
       );
     } catch (e) {
       return null;
