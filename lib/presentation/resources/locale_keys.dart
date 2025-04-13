@@ -17,4 +17,7 @@ abstract class LocaleKeys{
   static const home_home_trending = 'home.home_trending';
   static const home_home_see_all = 'home.home_see_all';
   static const home_home_latest = 'home.home_latest';
+  static const login_error_empty_username = 'login_error_empty_username';
+  static const login_error_empty_password = 'login_error_empty_password';
+  static const login_error_empty_fields = 'login_error_empty_fields';
 }

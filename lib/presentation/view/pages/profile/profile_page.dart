@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/domain/entities/current_user.dart';
+import 'package:flutter_clean_architecture/shared/extension/context.dart';
 import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -36,6 +37,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
+    final iconColor =Theme.of(context).iconTheme.color;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 3,
@@ -97,12 +101,14 @@ class _ProfilePageState extends State<ProfilePage> {
                             alignment: Alignment.center,
                             child: Text(
                               'Profile',
-                              style: Theme.of(context).own()?.textTheme?.h3,
+                              style:  textTheme?.textMedium?.copyWith(
+                                color: colorSchema?.darkBlack,
+                              ),
                             ),
                           ),
                           InkWell(
                             onTap: () {
-                              context.router.push(const SettingRoute());
+                              context.router.push(const SettingsRoute());
                             },
                             child: Align(
                               alignment: Alignment.centerRight,
@@ -110,6 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 'assets/images/setting.png',
                                 width: 24,
                                 height: 24,
+                                  color: iconColor,
                               ),
                             ),
                           ),
@@ -148,14 +155,18 @@ class _ProfilePageState extends State<ProfilePage> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         user.fullName ?? 'User',
-                        style: Theme.of(context).own()?.textTheme?.highlightsMedium,
+                        style: textTheme?.textMediumLink?.copyWith(
+                          color: colorSchema?.darkBlack,
+                        ),
                       ),
                     ),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        user.bio ?? 'NotThing',
-                        style: Theme.of(context).own()?.textTheme?.small,
+                        user.bio ?? 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                        style: textTheme?.textMedium?.copyWith(
+                          color: colorSchema?.grayscaleBodyText,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -172,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: ElevatedButton.styleFrom(
                                 textStyle: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
-                                backgroundColor: AppColors.blueRibbon,
+                                backgroundColor: colorSchema?.primaryDefault,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -190,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: ElevatedButton.styleFrom(
                                 textStyle: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
-                                backgroundColor: AppColors.blueRibbon,
+                                backgroundColor: colorSchema?.primaryDefault,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -202,31 +213,24 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 13),
                     SizedBox(
-                      height: 400,
+                      height: 800,
                       child: DefaultTabController(
                         length: 2,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(
+                            SizedBox(
                               height: 36,
                               child: Align(
                                 alignment: Alignment.center,
                                 child: TabBar(
                                   indicatorColor: AppColors.blueRibbon,
-                                  labelColor: Colors.black,
+                                  labelColor: colorSchema?.darkBlack,
                                   unselectedLabelColor: AppColors.gray76,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    fontFamily: 'Poppins',
-                                    height: 24 / 16,
-                                  ),
-                                  unselectedLabelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    fontFamily: 'Poppins',
-                                    height: 24 / 16,
+                                  labelStyle: textTheme?.textMedium,
+                                  unselectedLabelStyle: textTheme?.textMedium
+                                      ?.copyWith(
+                                    color: colorSchema?.grayscaleBodyText,
                                   ),
                                   indicatorSize: TabBarIndicatorSize.label,
                                   tabAlignment: TabAlignment.center,
@@ -294,7 +298,11 @@ class _ProfileStat extends StatelessWidget {
       children: [
         Text(
           value,
-          style: Theme.of(context).own()?.textTheme?.highlightsMedium,
+          style: context.themeOwn().textTheme?.textMediumLink
+              ?.copyWith(
+            color:
+            context.themeOwn().colorSchema?.darkBlack,
+          ),
         ),
         Text(label, style: Theme.of(context).own()?.textTheme?.small),
       ],
@@ -347,77 +355,81 @@ class _NewsListTab extends StatelessWidget {
 
 Widget _buildItem(String category, String title, String source, String time,
     String imageUrl, String srcImage, BuildContext context) {
+  final textTheme = context.themeOwn().textTheme;
+  final colorSchema = context.themeOwn().colorSchema;
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-    child: SizedBox(
-      height: 112,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 4, 8),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                imageUrl,
-                width: 96,
-                height: 96,
-                fit: BoxFit.cover,
-              ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 4, 8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset(
+              imageUrl,
+              width: 96,
+              height: 96,
+              fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Padding(
-              padding:
-              const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(category,
-                      style: Theme.of(context).own()?.textTheme?.h2),
-                  const SizedBox(height: 4),
-                  Text(
-                    title,
-                    style: Theme.of(context).own()?.textTheme?.h3,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Padding(
+            padding:
+            const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(category,
+                    style: textTheme?.textXSmall?.copyWith(
+                      color: colorSchema?.grayscaleBodyText,
+                    ),),
+                const SizedBox(height: 4),
+                Text(
+                  title,
+                  style:textTheme?.textMedium?.copyWith(
+                    color: colorSchema?.darkBlack,
                   ),
-                  const SizedBox(height: 2),
-                  Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          srcImage,
-                          width: 20,
-                          height: 20,
-                          fit: BoxFit.cover,
-                        ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        srcImage,
+                        width: 20,
+                        height: 20,
+                        fit: BoxFit.cover,
                       ),
-                      const SizedBox(width: 4),
-                      Text(source,
-                          style: Theme.of(context)
-                              .own()
-                              ?.textTheme
-                              ?.primary),
-                      const SizedBox(width: 8),
-                      Icon(Icons.access_time,
-                          size: 12, color: Colors.grey.shade500),
-                      const SizedBox(width: 2),
-                      Text(time,
-                          style:
-                          Theme.of(context).own()?.textTheme?.medium),
-                      const Spacer(),
-                      Icon(Icons.more_horiz, color: Colors.grey.shade400),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(source,
+                        style: textTheme?.textXSmallLink?.copyWith(
+                          color: colorSchema?.grayscaleBodyText,
+                        ),),
+                    const SizedBox(width: 8),
+                    Icon(Icons.access_time,
+                        size: 12, color: Theme.of(context).iconTheme.color,),
+                    const SizedBox(width: 2),
+                    Text(time,
+                        style:
+                        textTheme?.textXSmall?.copyWith(
+                          color: colorSchema?.grayscaleBodyText,
+                        ),),
+                    const Spacer(),
+                    Icon(Icons.more_horiz, color: Colors.grey.shade400),
+                  ],
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 }

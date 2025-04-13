@@ -28,6 +28,10 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
   Widget builder(BuildContext context) {
     final textTheme = context.themeOwn().textTheme;
     final colorSchema = context.themeOwn().colorSchema;
+
+    final usernameController = TextEditingController();
+    final passwordController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.pageStatus == PageStatus.Error &&
@@ -47,139 +51,165 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    LocaleKeys.login_hello.tr(),
-                    style: textTheme?.textDisplayLargeBold?.copyWith(
-                      color: colorSchema?.grayscaleTitleactive,
-                    ),
-                  ),
-                  Text(
-                    LocaleKeys.login_again.tr(),
-                    style: textTheme?.textDisplayLargeBold?.copyWith(
-                      color: colorSchema?.primaryDefault,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    LocaleKeys.login_title.tr(),
-                    style: textTheme?.textLarge?.copyWith(
-                      color:Theme.of(context).brightness == Brightness.light ? colorSchema?.grayscaleBodyText : const Color(0xffB0B3B8),
-                    ),
-                  ),
-                  const SizedBox(height: 48),
-                  AppFormField(
-                    label: LocaleKeys.login_label_username.tr(),
-                    isRequire: true,
-                  ),
-                  const SizedBox(height: 16),
-                  AppSecureFormField(
-                    label: LocaleKeys.login_label_password.tr(),
-                    isRequired: true,
-                  ),
-                  SizedBox(height: 8,),
-                  Row(
-                    children: [
-                    AppCheckBox(
-                      borderColor: Theme.of(context).brightness == Brightness.light ? colorSchema?.grayscaleBodyText : colorSchema?.darkmodeBody,
-                      size: CheckBoxSize.normal,
-                      checkedColor: colorSchema?.primaryDefault,
-                      value: true,
-                    ),
-                      const SizedBox(width: 4),
-                      Text(
-                        LocaleKeys.login_checkbox_remember.tr(),
-                        style: textTheme?.textSmall?.copyWith(
-                          color: colorSchema?.grayscaleBodyText,
-                        ),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      LocaleKeys.login_hello.tr(),
+                      style: textTheme?.textDisplayLargeBold?.copyWith(
+                        color: colorSchema?.grayscaleTitleactive,
                       ),
-                      Spacer(),
-                      Text(
-                        LocaleKeys.login_forgot_password.tr(),
-                        style: textTheme?.textSmall?.copyWith(
-                          color: colorSchema?.primaryDefault,
-                        ),
+                    ),
+                    Text(
+                      LocaleKeys.login_again.tr(),
+                      style: textTheme?.textDisplayLargeBold?.copyWith(
+                        color: colorSchema?.primaryDefault,
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 16,),
-                  SizedBox(
-                    width: 379,
-                    height: 50,
-                    child:  AppButton.primary(
-                      height: 50,
-                      backgroundColor: colorSchema?.primaryDefault,
-                      title: LocaleKeys.login_login_button.tr(),
-                      titleStyle: textTheme?.textMediumLink,
-                      onPressed:
-                          () => {
-                            context.router.push(HomeRoute())
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      LocaleKeys.login_title.tr(),
+                      style: textTheme?.textLarge?.copyWith(
+                        color:Theme.of(context).brightness == Brightness.light ? colorSchema?.grayscaleBodyText : const Color(0xffB0B3B8),
+                      ),
+                    ),
+                    const SizedBox(height: 48),
+                    AppFormField(
+                      label: LocaleKeys.login_label_username.tr(),
+                      isRequire: true,
+                      controller: usernameController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return LocaleKeys.login_error_empty_username.tr();
+                        }
+                        return null;
                       },
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Center(
-                    child: Text(
-                      LocaleKeys.login_continue_with_label.tr(),
-                      style: textTheme?.textSmall?.copyWith(
-                        color: colorSchema?.grayscaleBodyText,
+                    const SizedBox(height: 16),
+                    AppSecureFormField(
+                      label: LocaleKeys.login_label_password.tr(),
+                      isRequired: true,
+                      controller: passwordController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return LocaleKeys.login_error_empty_password.tr();
+                        }
+                        return null;
+                      },
                     ),
+                    SizedBox(height: 8,),
+                    Row(
+                      children: [
+                      AppCheckBox(
+                        borderColor: Theme.of(context).brightness == Brightness.light ? colorSchema?.grayscaleBodyText : colorSchema?.darkmodeBody,
+                        size: CheckBoxSize.normal,
+                        checkedColor: colorSchema?.primaryDefault,
+                        value: true,
+                      ),
+                        const SizedBox(width: 4),
+                        Text(
+                          LocaleKeys.login_checkbox_remember.tr(),
+                          style: textTheme?.textSmall?.copyWith(
+                            color: colorSchema?.grayscaleBodyText,
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          LocaleKeys.login_forgot_password.tr(),
+                          style: textTheme?.textSmall?.copyWith(
+                            color: colorSchema?.primaryDefault,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: AppButton.primary(
-                          height: 48,
-                          backgroundColor:
-                          colorSchema?.grayscaleSecondaryButton,
-                          title: LocaleKeys.login_facebook_button.tr(),
-                          titleStyle: textTheme?.textMediumLink?.copyWith(
-                            color: const Color(0xff667080),
-                          ),
-                          onPressed: () {},
-                          icon: Assets.icons.facebook.svg(),
-                        ),
+                    SizedBox(height: 16,),
+                    SizedBox(
+                      height: 50,
+                      child:  AppButton.primary(
+                        height: 50,
+                        backgroundColor: colorSchema?.primaryDefault,
+                        title: LocaleKeys.login_login_button.tr(),
+                        titleStyle: textTheme?.textMediumLink,
+                        onPressed: () {
+                          final isValid = formKey.currentState?.validate() ?? false;
+                          if (!isValid) {
+                            print('Form validation failed');
+                          } else {
+                            final username = usernameController.text.trim();
+                            final password = passwordController.text.trim();
+
+                            context.read<LoginBloc>().add(LoginEvent.login(
+                              username: username,
+                              password: password,
+                            ));
+                          }
+                        },
                       ),
-                      const SizedBox(width: 31),
-                      Expanded(
-                        child: AppButton.primary(
-                          backgroundColor:
-                          colorSchema?.grayscaleSecondaryButton,
-                          title: LocaleKeys.login_google_button.tr(),
-                          titleStyle: textTheme?.textMediumLink?.copyWith(
-                            color:const Color(0xff667080),
-                          ),
-                          onPressed: () {
-                          },
-                          icon: Assets.icons.goggleIcon.svg(),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        LocaleKeys.login_don_have_account_label.tr(),
+                    ),
+                    const SizedBox(height: 16),
+                    Center(
+                      child: Text(
+                        LocaleKeys.login_continue_with_label.tr(),
                         style: textTheme?.textSmall?.copyWith(
                           color: colorSchema?.grayscaleBodyText,
-                        ),
                       ),
-                      Text(
-                        LocaleKeys.login_sign_up.tr(),
-                        style: textTheme?.textSmallLink?.copyWith(
-                          color: colorSchema?.primaryDefault,
-                        ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: AppButton.primary(
+                            height: 48,
+                            backgroundColor:
+                            colorSchema?.grayscaleSecondaryButton,
+                            title: LocaleKeys.login_facebook_button.tr(),
+                            titleStyle: textTheme?.textMediumLink?.copyWith(
+                              color: const Color(0xff667080),
+                            ),
+                            onPressed: () {},
+                            icon: Assets.icons.facebook.svg(),
+                          ),
+                        ),
+                        const SizedBox(width: 31),
+                        Expanded(
+                          child: AppButton.primary(
+                            backgroundColor:
+                            colorSchema?.grayscaleSecondaryButton,
+                            title: LocaleKeys.login_google_button.tr(),
+                            titleStyle: textTheme?.textMediumLink?.copyWith(
+                              color:const Color(0xff667080),
+                            ),
+                            onPressed: () {
+                            },
+                            icon: Assets.icons.goggleIcon.svg(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          LocaleKeys.login_don_have_account_label.tr(),
+                          style: textTheme?.textSmall?.copyWith(
+                            color: colorSchema?.grayscaleBodyText,
+                          ),
+                        ),
+                        Text(
+                          LocaleKeys.login_sign_up.tr(),
+                          style: textTheme?.textSmallLink?.copyWith(
+                            color: colorSchema?.primaryDefault,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

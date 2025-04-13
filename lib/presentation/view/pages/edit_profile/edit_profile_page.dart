@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/domain/entities/current_user.dart';
 import 'package:flutter_clean_architecture/presentation/resources/colors.dart';
-import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
+import 'package:flutter_clean_architecture/shared/extension/context.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../../base/base_page.dart';
 import 'edit_profile_bloc.dart';
+
 @RoutePage()
 class EditProfilePage
     extends BasePage<EditProfileBloc, EditProfileEvent, EditProfileState> {
@@ -38,7 +39,9 @@ class EditProfilePage
   @override
   Widget builder(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
+    final iconColor = Theme.of(context).iconTheme.color;
     return SafeArea(
       child: FutureBuilder<CurrentUser?>(
         future: _loadUserProfile(),
@@ -54,17 +57,20 @@ class EditProfilePage
           final user = snapshot.data!;
 
           final TextEditingController usernameController =
-          TextEditingController(text: user.username);
+              TextEditingController(text: user.username);
           final TextEditingController fullNameController =
-          TextEditingController(text: user.fullName ?? '');
-          final TextEditingController emailController =
-          TextEditingController(text: user.email);
+              TextEditingController(text: user.fullName ?? '');
+          final TextEditingController emailController = TextEditingController(
+            text: user.email,
+          );
           final TextEditingController phoneNumberController =
-          TextEditingController(text: user.phoneNumber);
-          final TextEditingController bioController =
-          TextEditingController(text: user.bio ?? '');
-          final TextEditingController websiteController =
-          TextEditingController(text: user.website ?? '');
+              TextEditingController(text: user.phoneNumber);
+          final TextEditingController bioController = TextEditingController(
+            text: user.bio ?? '',
+          );
+          final TextEditingController websiteController = TextEditingController(
+            text: user.website ?? '',
+          );
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(24),
@@ -82,18 +88,18 @@ class EditProfilePage
                           onTap: () {
                             context.router.pop();
                           },
-                          child: Icon(
-                            Icons.clear,
-                            color: AppColors.gray76,
-                          ),
+                          child: Icon(Icons.clear, color: iconColor),
                         ),
                         Text(
                           'Edit Profile',
-                          style: Theme.of(context).own()?.textTheme?.h3,
+                          style: textTheme?.textMediumLink?.copyWith(
+                            color: colorSchema?.darkBlack,
+                          ),
                         ),
                         InkWell(
                           onTap: () async {
-                            if (_formKey.currentState?.validate() != true) return;
+                            if (_formKey.currentState?.validate() != true)
+                              return;
 
                             final updatedUser = CurrentUser(
                               id: user.id,
@@ -101,12 +107,14 @@ class EditProfilePage
                               fullName: fullNameController.text,
                               email: emailController.text,
                               phoneNumber: phoneNumberController.text,
-                              bio: bioController.text.isNotEmpty
-                                  ? bioController.text
-                                  : null,
-                              website: websiteController.text.isNotEmpty
-                                  ? websiteController.text
-                                  : null,
+                              bio:
+                                  bioController.text.isNotEmpty
+                                      ? bioController.text
+                                      : null,
+                              website:
+                                  websiteController.text.isNotEmpty
+                                      ? websiteController.text
+                                      : null,
                               imagePath: user.imagePath,
                             );
 
@@ -121,7 +129,7 @@ class EditProfilePage
 
                             context.router.pop();
                           },
-                          child: Icon(Icons.check, color: AppColors.black),
+                          child: Icon(Icons.check, color: iconColor),
                         ),
                       ],
                     ),
@@ -132,12 +140,14 @@ class EditProfilePage
                       CircleAvatar(
                         radius: 70,
                         backgroundColor: AppColors.white,
-                        backgroundImage: user.imagePath != null
-                            ? AssetImage(user.imagePath!)
-                            : null,
-                        child: user.imagePath == null
-                            ? const Icon(Icons.person, size: 70)
-                            : null,
+                        backgroundImage:
+                            user.imagePath != null
+                                ? AssetImage(user.imagePath!)
+                                : null,
+                        child:
+                            user.imagePath == null
+                                ? const Icon(Icons.person, size: 70)
+                                : null,
                       ),
                       Positioned(
                         bottom: 0,
@@ -147,13 +157,23 @@ class EditProfilePage
                     ],
                   ),
                   const SizedBox(height: 16),
-                  _buildTextField(context, 'Username', usernameController,
-                      enabled: false),
+                  _buildTextField(
+                    context,
+                    'Username',
+                    usernameController,
+                    enabled: false,
+                  ),
                   const SizedBox(height: 16),
                   _buildTextField(context, 'Full Name', fullNameController),
                   const SizedBox(height: 16),
-                  _buildTextField(context, 'Email Address', emailController,
-                      isRequired: true, enabled: true, isEmail: true),
+                  _buildTextField(
+                    context,
+                    'Email Address',
+                    emailController,
+                    isRequired: true,
+                    enabled: true,
+                    isEmail: true,
+                  ),
                   const SizedBox(height: 16),
                   _buildTextField(
                     context,
@@ -177,28 +197,39 @@ class EditProfilePage
   }
 
   Widget _buildTextField(
-      BuildContext context,
-      String label,
-      TextEditingController controller, {
-        bool isRequired = false,
-        bool enabled = true,
-        bool isEmail = false,
-        bool isPhone = false,
-      }) {
+    BuildContext context,
+    String label,
+    TextEditingController controller, {
+    bool isRequired = false,
+    bool enabled = true,
+    bool isEmail = false,
+    bool isPhone = false,
+  }) {
+    final textTheme = context.themeOwn().textTheme;
+    final colorSchema = context.themeOwn().colorSchema;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Text(label, style: Theme.of(context).own()?.textTheme?.h2),
+            Text(
+              label,
+              style: textTheme?.textSmall?.copyWith(
+                color:
+                    Theme.of(context).brightness == Brightness.light
+                        ? colorSchema?.grayscaleBodyText
+                        : colorSchema?.darkmodeBody,
+              ),
+            ),
             if (isRequired)
               Text(
                 '*',
-                style: Theme.of(context)
-                    .own()
-                    ?.textTheme
-                    ?.h2
-                    ?.copyWith(color: AppColors.brickRed),
+                style: textTheme?.textSmall?.copyWith(
+                  color:
+                      Theme.of(context).brightness == Brightness.light
+                          ? colorSchema?.errorDark
+                          : colorSchema?.errorDarkmode,
+                ),
               ),
           ],
         ),
@@ -206,12 +237,14 @@ class EditProfilePage
         TextFormField(
           controller: controller,
           enabled: enabled,
+
           decoration: InputDecoration(
             fillColor: AppColors.white,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 14,
             ),
+            suffixIcon: SizedBox.shrink(),
           ),
           validator: (value) {
             if (isRequired && (value == null || value.trim().isEmpty)) {
@@ -219,8 +252,7 @@ class EditProfilePage
             }
             if (isEmail &&
                 value != null &&
-                !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                    .hasMatch(value)) {
+                !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
               return 'Invalid email format';
             }
             if (isPhone &&
@@ -235,4 +267,3 @@ class EditProfilePage
     );
   }
 }
-

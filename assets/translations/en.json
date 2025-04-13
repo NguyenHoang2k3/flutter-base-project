@@ -7,6 +7,9 @@
     "not_a_valid_e_link": "link is Invalid"
   },
   "login": {
+    "login_error_empty_username": "Username cannot be empty",
+    "login_error_empty_password": "Password cannot be empty",
+    "login_error_empty_fields": "Username and password cannot be empty",
     "login_hello": "Hello",
     "login_again": "Again!",
     "login_title": "Welcome back you’ve\nbeen missed",
