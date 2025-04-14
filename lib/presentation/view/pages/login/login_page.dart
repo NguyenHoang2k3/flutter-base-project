@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/view/widgets/app_checkbox.dart';
 import 'package:flutter_clean_architecture/shared/extension/context.dart';
+import 'package:flutter_clean_architecture/shared/utils/logger.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../base/base_page.dart';
 import '../../../base/page_status.dart';
@@ -36,6 +37,7 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
       listener: (context, state) {
         if (state.pageStatus == PageStatus.Error &&
             state.pageErrorMessage != null) {
+          logger.d('a');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.pageErrorMessage!),
@@ -77,6 +79,7 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                     ),
                     const SizedBox(height: 48),
                     AppFormField(
+                      //decoration: InputDecoration(errorText: 's'),
                       label: LocaleKeys.login_label_username.tr(),
                       isRequire: true,
                       controller: usernameController,
@@ -132,7 +135,9 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                         backgroundColor: colorSchema?.primaryDefault,
                         title: LocaleKeys.login_login_button.tr(),
                         titleStyle: textTheme?.textMediumLink,
+
                         onPressed: () {
+
                           final isValid = formKey.currentState?.validate() ?? false;
                           if (!isValid) {
                             print('Form validation failed');
@@ -184,6 +189,9 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                               color:const Color(0xff667080),
                             ),
                             onPressed: () {
+                              context.read<LoginBloc>().add(
+                              LoginEvent.pressGoogleLogin(),
+                            );
                             },
                             icon: Assets.icons.goggleIcon.svg(),
                           ),

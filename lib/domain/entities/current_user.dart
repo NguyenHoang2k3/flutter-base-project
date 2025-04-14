@@ -4,23 +4,23 @@ part 'current_user.g.dart';
 
 @JsonSerializable()
 class CurrentUser {
-  CurrentUser({
-    required this.id,
+  CurrentUser(
+     this.id,
     this.fullName,
     this.imagePath,
-    required this.username,
-    required this.email,
-    required this.phoneNumber,
+     this.username,
+     this.email,
+     this.phoneNumber,
     this.bio,
     this.website,
-  });
+  );
 
-  final String id;
+  final String? id;
   final String? imagePath;
   final String? fullName;
-  final String username;
-  final String email;
-  final String phoneNumber;
+  final String? username;
+  final String? email;
+  final String? phoneNumber;
   final String? bio;
   final String? website;
 

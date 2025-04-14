@@ -27,6 +27,8 @@ class DetailNewsPage
     final textTheme = context.themeOwn().textTheme;
     final colorSchema = context.themeOwn().colorSchema;
 
+    return BlocBuilder<DetailNewsBloc, DetailNewsState>(
+  builder: (context, state) {
     return Scaffold(
       bottomNavigationBar: SizedBox(
         height: 78,
@@ -45,7 +47,7 @@ class DetailNewsPage
                     SizedBox(width: 16),
                     InkWell(
                       onTap: () {
-                        context.router.push(const CommentRoute());
+                        context.router.push( CommentRoute(newsId: state.newsDetail?.id ??''));
                       },
                       child: SvgPicture.asset('assets/images/comment.svg'),
                     ),
@@ -216,5 +218,7 @@ class DetailNewsPage
         ),
       ),
     );
+  },
+);
   }
 }

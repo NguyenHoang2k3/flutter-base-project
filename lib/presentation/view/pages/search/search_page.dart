@@ -282,28 +282,30 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
             child: Image.asset(image, width: 70, height: 70),
           ),
           SizedBox(width: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: textTheme?.textMedium?.copyWith(
-                  color: colorSchema?.darkBlack,
-                ),
-                ),
-                SizedBox(height: 4),
-                SizedBox(
-                  width: 190,
-                  child: Text(
-                    contextt,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: textTheme?.textSmall?.copyWith(
-                      color: colorSchema?.grayscaleBodyText,
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: textTheme?.textMedium?.copyWith(
+                    color: colorSchema?.darkBlack,
+                  ),
+                  ),
+                  SizedBox(height: 4),
+                  SizedBox(
+                    width: 190,
+                    child: Text(
+                      contextt,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: textTheme?.textSmall?.copyWith(
+                        color: colorSchema?.grayscaleBodyText,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           SizedBox(width: 8),

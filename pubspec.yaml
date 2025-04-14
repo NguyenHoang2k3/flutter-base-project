@@ -68,6 +68,7 @@ dependencies:
   google_sign_in: ^6.3.0  # kiểm tra pub.dev để lấy version mới nhất
   firebase_auth: ^4.16.0  # nếu dùng Firebase Auth
   firebase_core: ^2.24.2
+  cloud_firestore: ^4.17.5
 
 dev_dependencies:
   flutter_test:

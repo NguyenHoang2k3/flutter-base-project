@@ -10,4 +10,5 @@ class LoginState extends BaseState with _$LoginState {
   });
   final List<Users> usersList;
   final bool isLoggedIn;
+
 }

@@ -42,6 +42,8 @@ class EditProfilePage
     final textTheme = context.themeOwn().textTheme;
     final colorSchema = context.themeOwn().colorSchema;
     final iconColor = Theme.of(context).iconTheme.color;
+    return BlocBuilder<EditProfileBloc,EditProfileState>(
+  builder: (context, state) {
     return SafeArea(
       child: FutureBuilder<CurrentUser?>(
         future: _loadUserProfile(),
@@ -102,20 +104,20 @@ class EditProfilePage
                               return;
 
                             final updatedUser = CurrentUser(
-                              id: user.id,
-                              username: usernameController.text,
-                              fullName: fullNameController.text,
-                              email: emailController.text,
-                              phoneNumber: phoneNumberController.text,
-                              bio:
+                              user.id,
+                              usernameController.text,
+                              fullNameController.text,
+                              emailController.text,
+                              phoneNumberController.text,
+
                                   bioController.text.isNotEmpty
                                       ? bioController.text
                                       : null,
-                              website:
+
                                   websiteController.text.isNotEmpty
                                       ? websiteController.text
                                       : null,
-                              imagePath: user.imagePath,
+                              user.imagePath,
                             );
 
                             await _saveUserProfile(updatedUser);
@@ -194,6 +196,8 @@ class EditProfilePage
         },
       ),
     );
+  },
+);
   }
 
   Widget _buildTextField(

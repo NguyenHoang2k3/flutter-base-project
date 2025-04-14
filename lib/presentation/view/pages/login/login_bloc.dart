@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../../../../domain/usecases/login_by_google_use_case.dart';
 import '../../../../shared/common/error_converter.dart';
 import '../../../base/base_bloc.dart';
 import '../../../base/base_state.dart';
@@ -17,9 +18,21 @@ part 'login_state.dart';
 
 @injectable
 class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
-  LoginBloc(this._getUsersListUseCase) : super(const LoginState()) {
+  LoginBloc(this._getUsersListUseCase, this._loginByGoogleUseCase) : super(const LoginState()) {
     on<LoginEvent>((event, emit) async {
       try {
+        if(event == _PressGoogleLogin()) {
+          print('bloc---------------------');
+          bool loginSuccess = await _loginByGoogleUseCase.call(params: LoginByGoogleParam());
+          if (loginSuccess) {
+            emit(state.copyWith(isLoggedIn: true));
+          } else {
+            emit(state.copyWith(
+              pageStatus: PageStatus.Error,
+              pageErrorMessage: 'Google login failed: Unable to authenticate',
+            ));
+          }
+        }
         if (event == _LoadData()) {
           final users = await _getUsersListUseCase.call(params: GetUsersListParam());
           emit(state.copyWith(pageStatus: PageStatus.Loaded, usersList: users));
@@ -40,14 +53,14 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
 
             if (user != null) {
               final currentUser = CurrentUser(
-                id: user.id ?? '',
-                fullName: '',
-                imagePath: user.imageUrl,
-                username: user.username??'',
-                email: user.email ?? '',
-                phoneNumber: '',
-                bio: null,
-                website: null,
+                user.id ?? '',
+                '',
+                user.imageUrl,
+                 user.username??'',
+                 user.email ?? '',
+                '',
+                null,
+                null,
               );
 
               await _saveUserToPreferences(currentUser);
@@ -72,7 +85,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
   }
 
   final GetUsersListUseCase _getUsersListUseCase;
-
+  final LoginByGoogleUseCase _loginByGoogleUseCase;
   ///lưu currnentUser
   Future<void> _saveUserToPreferences(CurrentUser user) async {
     final prefs = await SharedPreferences.getInstance();

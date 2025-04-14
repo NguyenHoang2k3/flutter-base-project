@@ -7,4 +7,5 @@ sealed class LoginEvent with _$LoginEvent {
     required String username,
     required String password,
   }) = _Login;
+  const factory LoginEvent.pressGoogleLogin() = _PressGoogleLogin;
 }

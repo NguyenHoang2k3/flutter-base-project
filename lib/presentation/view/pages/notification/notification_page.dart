@@ -25,7 +25,7 @@ class NotificationPage
   Widget builder(BuildContext context) {
     final textTheme = context.themeOwn().textTheme;
     final colorSchema = context.themeOwn().colorSchema;
-    final iconColor =Theme.of(context).iconTheme.color;
+    final iconColor = Theme.of(context).iconTheme.color;
     return BlocBuilder<NotificationBloc, NotificationState>(
       builder: (context, state) {
         return Scaffold(
@@ -57,9 +57,12 @@ class NotificationPage
                   },
                   itemBuilder:
                       (context) => [
-                    PopupMenuItem(value: "Settings", child: Text("Settings")),
-                    PopupMenuItem(value: "Logout", child: Text("Logout")),
-                  ],
+                        PopupMenuItem(
+                          value: "Settings",
+                          child: Text("Settings"),
+                        ),
+                        PopupMenuItem(value: "Logout", child: Text("Logout")),
+                      ],
                 ),
               ),
             ],
@@ -72,7 +75,8 @@ class NotificationPage
                   itemBuilder: (context, index) {
                     final entry = state.listNotificatioFollowDay?.entries
                         .elementAt(index);
-                    final List<entity.Notification> subList = entry?.value ?? [];
+                    final List<entity.Notification> subList =
+                        entry?.value ?? [];
                     return Padding(
                       padding: const EdgeInsets.only(right: 24, left: 24),
                       child: Column(
@@ -87,127 +91,147 @@ class NotificationPage
                           const Gap(16),
                           Column(
                             children:
-                            subList.map((notification) {
-                              return Column(
-                                children: [
-                                  Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).brightness == Brightness.light ? colorSchema
-                                          ?.grayscaleSecondaryButton : colorSchema?.darkmodeInputBackground,
-                                      borderRadius: BorderRadius.circular(
-                                        6,
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 14,
-                                        horizontal: 8,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 70,
-                                            height: 70,
-                                            child: ClipOval(
-                                              child: Image.asset(
-                                                notification.imagePath,
-                                                fit: BoxFit.cover,
+                                subList.map((notification) {
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color:
+                                              Theme.of(context).brightness ==
+                                                      Brightness.light
+                                                  ? colorSchema
+                                                      ?.grayscaleSecondaryButton
+                                                  : colorSchema
+                                                      ?.darkmodeInputBackground,
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 14,
+                                            horizontal: 8,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 70,
+                                                height: 70,
+                                                child: ClipOval(
+                                                  child: Image.asset(
+                                                    notification.imagePath,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          Gap(16),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                Text.rich(
-                                                  maxLines: 2,
-                                                  softWrap: true,
-                                                  overflow:
-                                                  TextOverflow
-                                                      .ellipsis,
-                                                  TextSpan(
-                                                    children: [
+                                              Gap(16),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text.rich(
+                                                      maxLines: 2,
+                                                      softWrap: true,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       TextSpan(
-                                                        text:
-                                                        notification
-                                                            .users
-                                                            .username,
-                                                        style: textTheme
-                                                            ?.textMediumLink
-                                                            ?.copyWith(
-                                                          color:
-                                                          colorSchema
-                                                              ?.grayscaleTitleactive,
-                                                        ),
+                                                        children: [
+                                                          TextSpan(
+                                                            text:
+                                                                notification
+                                                                    .users
+                                                                    .username,
+                                                            style: textTheme
+                                                                ?.textMediumLink
+                                                                ?.copyWith(
+                                                                  color:
+                                                                      colorSchema
+                                                                          ?.grayscaleTitleactive,
+                                                                ),
+                                                          ),
+                                                          const TextSpan(
+                                                            text: ' ',
+                                                          ),
+                                                          TextSpan(
+                                                            text:
+                                                                notification
+                                                                    .message,
+                                                            style: textTheme
+                                                                ?.textMedium
+                                                                ?.copyWith(
+                                                                  color:
+                                                                      colorSchema
+                                                                          ?.grayscaleTitleactive,
+                                                                ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      const TextSpan(
-                                                        text: ' ',
-                                                      ),
-                                                      TextSpan(
-                                                        text:
-                                                        notification
-                                                            .message,
-                                                        style: textTheme
-                                                            ?.textMedium
-                                                            ?.copyWith(
-                                                          color:
-                                                          colorSchema
-                                                              ?.grayscaleTitleactive,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                    Text(
+                                                      notification.timeNotify
+                                                          .getDayAgo(),
+                                                      style: textTheme
+                                                          ?.textXSmall
+                                                          ?.copyWith(
+                                                            color:
+                                                                colorSchema
+                                                                    ?.grayscaleBodyText,
+                                                          ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                Text(
-                                                  notification.timeNotify.getDayAgo(),
-                                                  style: textTheme
-                                                      ?.textXSmall
-                                                      ?.copyWith(
-                                                    color:
-                                                    colorSchema
-                                                        ?.grayscaleBodyText,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                              ),
 
-                                          if (notification.typeNotification == "follow") Padding(
-                                            padding: const EdgeInsets.only(left: 16),
-                                            child: InkWell(
-                                              onTap: () {
-                                                context
-                                                    .read<
-                                                    NotificationBloc
-                                                >()
-                                                    .add(
-                                                  NotificationEvent.changeFollowed(
-                                                    notification
-                                                        .users
-                                                        .id ?? '',
+                                              if (notification
+                                                      .typeNotification ==
+                                                  "follow")
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        left: 16,
+                                                      ),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      context
+                                                          .read<
+                                                            NotificationBloc
+                                                          >()
+                                                          .add(
+                                                            NotificationEvent.changeFollowed(
+                                                              notification
+                                                                      .users
+                                                                      .id ??
+                                                                  '',
+                                                            ),
+                                                          );
+                                                    },
+                                                    child:
+                                                        notification
+                                                                .users
+                                                                .isFollow
+                                                            ? Assets
+                                                                .icons
+                                                                .following
+                                                                .svg()
+                                                            : Assets
+                                                                .icons
+                                                                .followIcon
+                                                                .svg(),
                                                   ),
-                                                );
-                                              },
-                                              child:
-                                              notification.users.isFollow
-                                                  ? Assets.icons.following.svg() : Assets.icons.followIcon.svg(),
-                                            ),
-                                          ) else const SizedBox.shrink(),
-                                        ],
+                                                )
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  const Gap(16),
-                                ],
-                              );
-                            }).toList(),
+                                      const Gap(16),
+                                    ],
+                                  );
+                                }).toList(),
                           ),
                         ],
                       ),
