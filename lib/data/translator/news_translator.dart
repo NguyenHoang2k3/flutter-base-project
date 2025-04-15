@@ -26,6 +26,7 @@ extension NewsTranslator on NewsRespone {
         0,
         true,
       ),
+      userLikeId: [],
 
 
     );

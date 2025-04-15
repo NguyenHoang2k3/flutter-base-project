@@ -51,9 +51,10 @@ class _CommentState extends State<Comment> {
                 width: 40,
                 height: 40,
                 child: ClipOval(
-                  child: Image.network(
+                  child: Image.asset(
                     fit: BoxFit.cover,
-                    widget.newsComment.userComment.imageUrl??'',
+                    "assets/images/bbc.png"
+                    //widget.newsComment.userComment.imageUrl??'',
                   ),
                 ),
               ),

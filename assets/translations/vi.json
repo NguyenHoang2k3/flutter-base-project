@@ -17,12 +17,12 @@
     "login_label_password": "Password",
     "login_checkbox_remember": "Remember me",
     "login_forgot_password": "Forgot the password ?",
+    "login_login_button": "Login",
     "login_facebook_button": "Facebook",
     "login_google_button": "Google",
     "login_continue_with_label": "or continue with",
-    "login_don_have_account_label": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdon’t have an account ? ",
-    "login_sign_up": "Sign Up",
-    "login_login_button": "Login"
+    "login_don_have_account_label": "don’t have an account ? ",
+    "login_sign_up": "Sign Up"
   },
   "home": {
     "home_search_hint": "Search",

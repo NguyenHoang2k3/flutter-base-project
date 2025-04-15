@@ -17,6 +17,8 @@ class News extends Equatable {
     required this.like,
     required this.saved,
     required this.users,
+    required this.userLikeId,
+
   });
 
 
@@ -32,6 +34,7 @@ class News extends Equatable {
   final int? like;
   final bool? saved;
   final Users? users;
+  final List<String> userLikeId;
 
 
 

@@ -9,5 +9,8 @@ abstract class NewsRepository {
   Future<List<News>> getNewsBySearch(String key);
   Future<bool> changeFollows(String userName);
   Future<News?> getNewsById(String id);
+  Future<bool> checkLikeForCurrentUser(String newsId);
+  Future<bool> changeLikeForCurrentUser(String newsId);
+  Future<List<News>> getNewsOfCurrentUser();
 
 }

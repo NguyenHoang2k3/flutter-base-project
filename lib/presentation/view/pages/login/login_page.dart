@@ -33,6 +33,9 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
     final usernameController = TextEditingController();
     final passwordController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+
+    final usernameErrorNotifier = ValueNotifier<String?>(null);
+    final passwordErrorNotifier = ValueNotifier<String?>(null);
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.pageStatus == PageStatus.Error &&
@@ -78,28 +81,43 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                       ),
                     ),
                     const SizedBox(height: 48),
-                    AppFormField(
-                      //decoration: InputDecoration(errorText: 's'),
-                      label: LocaleKeys.login_label_username.tr(),
-                      isRequire: true,
-                      controller: usernameController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return LocaleKeys.login_error_empty_username.tr();
-                        }
-                        return null;
+                    ValueListenableBuilder<String?>(
+                      valueListenable: usernameErrorNotifier,
+                      builder: (context, errorText, child) {
+                        return AppFormField(
+                          label: LocaleKeys.login_label_username.tr(),
+                          isRequire: true,
+                          controller: usernameController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return LocaleKeys.login_error_empty_username.tr();
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            errorText: errorText,
+                          ),
+                        );
                       },
                     ),
                     const SizedBox(height: 16),
-                    AppSecureFormField(
-                      label: LocaleKeys.login_label_password.tr(),
-                      isRequired: true,
-                      controller: passwordController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return LocaleKeys.login_error_empty_password.tr();
-                        }
-                        return null;
+                    ValueListenableBuilder<String?>(
+                      valueListenable: passwordErrorNotifier,
+                      builder: (context, errorText, child) {
+                        return AppSecureFormField(
+                          label: LocaleKeys.login_label_password.tr(),
+                          isRequired: true,
+                          controller: passwordController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return LocaleKeys.login_error_empty_password.tr();
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            errorText: errorText,
+                          ),
+                        );
                       },
                     ),
                     SizedBox(height: 8,),
@@ -112,17 +130,22 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                         value: true,
                       ),
                         const SizedBox(width: 4),
-                        Text(
-                          LocaleKeys.login_checkbox_remember.tr(),
-                          style: textTheme?.textSmall?.copyWith(
-                            color: colorSchema?.grayscaleBodyText,
+                        Expanded(
+                          child: Text(
+                            LocaleKeys.login_checkbox_remember.tr(),
+                            style: textTheme?.textSmall?.copyWith(
+                              color: colorSchema?.grayscaleBodyText,
+                                overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
-                        Spacer(),
-                        Text(
-                          LocaleKeys.login_forgot_password.tr(),
-                          style: textTheme?.textSmall?.copyWith(
-                            color: colorSchema?.primaryDefault,
+                        Flexible(
+                          child: Text(
+                            LocaleKeys.login_forgot_password.tr(),
+                            style: textTheme?.textSmall?.copyWith(
+                              color: colorSchema?.primaryDefault,
+                              overflow: TextOverflow.ellipsis
+                            ),
                           ),
                         ),
                       ],
@@ -135,13 +158,18 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                         backgroundColor: colorSchema?.primaryDefault,
                         title: LocaleKeys.login_login_button.tr(),
                         titleStyle: textTheme?.textMediumLink,
-
                         onPressed: () {
-
                           final isValid = formKey.currentState?.validate() ?? false;
-                          if (!isValid) {
-                            print('Form validation failed');
-                          } else {
+                          usernameErrorNotifier.value =
+                          usernameController.text.isEmpty
+                              ? LocaleKeys.login_error_empty_username.tr()
+                              : null;
+
+                          passwordErrorNotifier.value =
+                          passwordController.text.isEmpty
+                              ? LocaleKeys.login_error_empty_password.tr()
+                              : null;
+                          if (isValid) {
                             final username = usernameController.text.trim();
                             final password = passwordController.text.trim();
 
@@ -202,16 +230,22 @@ class LoginPage extends BasePage<LoginBloc, LoginEvent, LoginState> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          LocaleKeys.login_don_have_account_label.tr(),
-                          style: textTheme?.textSmall?.copyWith(
-                            color: colorSchema?.grayscaleBodyText,
+                        Flexible(
+                          child: Text(
+                            LocaleKeys.login_don_have_account_label.tr(),
+                            style: textTheme?.textSmall?.copyWith(
+                              color: colorSchema?.grayscaleBodyText,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
-                        Text(
-                          LocaleKeys.login_sign_up.tr(),
-                          style: textTheme?.textSmallLink?.copyWith(
-                            color: colorSchema?.primaryDefault,
+                        Flexible(
+                          child: Text(
+                            LocaleKeys.login_sign_up.tr(),
+                            style: textTheme?.textSmallLink?.copyWith(
+                              color: colorSchema?.primaryDefault,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                       ],

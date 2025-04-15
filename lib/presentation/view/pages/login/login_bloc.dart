@@ -22,7 +22,6 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
     on<LoginEvent>((event, emit) async {
       try {
         if(event == _PressGoogleLogin()) {
-          print('bloc---------------------');
           bool loginSuccess = await _loginByGoogleUseCase.call(params: LoginByGoogleParam());
           if (loginSuccess) {
             emit(state.copyWith(isLoggedIn: true));
@@ -41,10 +40,6 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
           final password = event.password;
 
           if (username.isEmpty || password.isEmpty) {
-            emit(state.copyWith(
-              pageStatus: PageStatus.Error,
-              pageErrorMessage: 'Username or password cannot be empty',
-            ));
           } else {
             final user = state.usersList.firstWhere(
                   (user) => user.username == username && user.password == password,
