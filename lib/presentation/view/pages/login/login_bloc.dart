@@ -15,44 +15,55 @@ import '../../../base/page_status.dart';
 part 'login_bloc.freezed.dart';
 part 'login_event.dart';
 part 'login_state.dart';
-
 @injectable
 class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
   LoginBloc(this._getUsersListUseCase, this._loginByGoogleUseCase) : super(const LoginState()) {
     on<LoginEvent>((event, emit) async {
       try {
-        if(event == _PressGoogleLogin()) {
-          bool loginSuccess = await _loginByGoogleUseCase.call(params: LoginByGoogleParam());
-          if (loginSuccess) {
-            emit(state.copyWith(isLoggedIn: true));
-          } else {
+        switch (event) {
+          case _PressGoogleLogin():
+            final success = await _loginByGoogleUseCase.call(params: LoginByGoogleParam());
+            if (success) {
+              emit(state.copyWith(isLoggedIn: true));
+            } else {
+              emit(state.copyWith(
+                pageStatus: PageStatus.Error,
+                pageErrorMessage: 'Google login failed: Unable to authenticate',
+              ));
+            }
+            break;
+
+          case _LoadData():
+            final users = await _getUsersListUseCase.call(params: GetUsersListParam());
             emit(state.copyWith(
-              pageStatus: PageStatus.Error,
-              pageErrorMessage: 'Google login failed: Unable to authenticate',
+              pageStatus: PageStatus.Loaded,
+              usersList: users,
             ));
-          }
-        }
-        if (event == _LoadData()) {
-          final users = await _getUsersListUseCase.call(params: GetUsersListParam());
-          emit(state.copyWith(pageStatus: PageStatus.Loaded, usersList: users));
-        } else if (event is _Login) {
-          final username = event.username;
-          final password = event.password;
+            break;
 
-          if (username.isEmpty || password.isEmpty) {
-          } else {
-            final user = state.usersList.firstWhere(
-                  (user) => user.username == username && user.password == password,
-              orElse: () => throw Exception('Invalid username or password'),
-            );
+          case final _Login loginEvent:
+            final username = loginEvent.username;
+            final password = loginEvent.password;
 
-            if (user != null) {
+            if (username.isEmpty || password.isEmpty) {
+              emit(state.copyWith(
+                pageStatus: PageStatus.Error,
+                pageErrorMessage: 'Username or password cannot be empty',
+              ));
+              return;
+            }
+
+            try {
+              final user = state.usersList.firstWhere(
+                    (u) => u.username == username && u.password == password,
+              );
+
               final currentUser = CurrentUser(
                 user.id ?? '',
-                '',
+                'HoangNguyenNhat',
                 user.imageUrl,
-                 user.username??'',
-                 user.email ?? '',
+                user.username ?? '',
+                user.email ?? '',
                 '',
                 null,
                 null,
@@ -65,13 +76,13 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
                 isLoggedIn: true,
                 pageErrorMessage: 'Login successful!',
               ));
-            } else {
+            } catch (_) {
               emit(state.copyWith(
                 pageStatus: PageStatus.Error,
                 pageErrorMessage: 'Invalid username or password',
               ));
             }
-          }
+            break;
         }
       } catch (e, s) {
         handleError(emit, ErrorConverter.convert(e, s));
@@ -81,7 +92,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
 
   final GetUsersListUseCase _getUsersListUseCase;
   final LoginByGoogleUseCase _loginByGoogleUseCase;
-  ///lưu currnentUser
+
   Future<void> _saveUserToPreferences(CurrentUser user) async {
     final prefs = await SharedPreferences.getInstance();
     final userJson = jsonEncode(user.toJson());

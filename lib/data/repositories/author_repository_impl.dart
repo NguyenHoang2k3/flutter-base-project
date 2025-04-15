@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter_clean_architecture/data/remote/models/respone/login_info_response.dart';
 import 'package:flutter_clean_architecture/domain/entities/current_user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -5,7 +6,6 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/repositories/author_repository_repository.dart';
 import '../../shared/common/error_entity/business_error_entity.dart';
-import '../../shared/utils/logger.dart';
 
 @Injectable(as: AuthorRepositoryRepository)
 class AuthorRepositoryRepositoryImpl extends AuthorRepositoryRepository {
@@ -21,7 +21,7 @@ class AuthorRepositoryRepositoryImpl extends AuthorRepositoryRepository {
     if (username == 'user' && password == '1') {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final CurrentUser currentUser = CurrentUser('','','','','','','','');
-      await saveUserToShareRefrence(currentUser);
+      await saveUserToPreferences(currentUser);
       if(isRemember) {
         await prefs.setString('username', username);
         await prefs.setString('password', password);
@@ -39,27 +39,12 @@ class AuthorRepositoryRepositoryImpl extends AuthorRepositoryRepository {
     }
   }
 
-  Future<CurrentUser> saveUserToShareRefrence(CurrentUser currentUser) async {
-    try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('currentUserId', '');
-      await prefs.setString('currentImagePath', '');
-      await prefs.setString('currentFullName',  '');
-      await prefs.setString('currentUsername', '');
-      await prefs.setString('currentEmail', '');
-      await prefs.setString('currentPhoneNumber', '');
-      await prefs.setString('currentBio', '');
-      await prefs.setString('currentWebsite', '');
-
-      return currentUser;
-    } catch (e) {
-      logger.d('$e');
-      throw BusinessErrorEntityData(
-        name: 'error',
-        message: 'error',
-      );
-    }
+  Future<void> saveUserToPreferences(CurrentUser user) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = jsonEncode(user.toJson());
+    await prefs.setString('currentUser', userJson);
   }
+
 
   @override
   Future<CurrentUser> getCurrentUser() async {
@@ -79,43 +64,29 @@ class AuthorRepositoryRepositoryImpl extends AuthorRepositoryRepository {
   @override
   Future<bool> loginByGoogle() async {
     try {
-      await GoogleSignIn().signOut();
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-/*
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
       if (googleUser == null) {
-        return false;
+        return false; // Người dùng cancel login
       }
 
-      final GoogleSignInAuthentication? googleAuth =
-      await googleUser.authentication;
-
-      if (googleAuth == null) {
-        return false;
-      }
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(credential);
-
-      final CurrentUser currentUser = CurrentUser(
-        userCredential.user?.uid ?? '',
-        userCredential.user?.displayName,
-        userCredential.user?.photoURL,
-        userCredential.user?.email?.split('@').first ?? '',
-        userCredential.user?.email ?? '',
-        userCredential.user?.phoneNumber ?? '',
+      // Tạo đối tượng CurrentUser từ thông tin googleUser
+      final currentUser = CurrentUser(
+        googleUser.id,
+        googleUser.displayName ?? '',
+        googleUser.photoUrl ?? '',
+        googleUser.displayName ?? '',
+        googleUser.email,
         '',
+        'Ukrainian President Volodymyr Zelensky has accused European countries that continue to buy Russian',
         '',
       );
 
-      await saveUserToShareRefrence(currentUser);*/
-
+      await saveUserToPreferences(currentUser);
       return true;
-    } catch (e) {
+
+    } catch (e, s) {
       print("Login failed: $e");
       return false;
     }

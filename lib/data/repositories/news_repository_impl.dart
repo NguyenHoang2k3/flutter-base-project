@@ -68,11 +68,8 @@ class NewsRepositoryImpl extends NewsRepository {
   Future<bool> changeFollows(String userName) async {
     final response = await _newsRemoteDataSource.getUsers();
     List<Users> users = response.map((e) => e.toEntity()).toList();
-    final index = users.indexWhere((user) => user.username == userName);
-    if (index != -1) {
-      final updatedUser = users[index].copyWith(isFollow: !users[index].isFollow);
-      users[index] = updatedUser;
-    }
+    final user = users.firstWhere((user) => user.username == userName);
+    user.isFollow = !user.isFollow;
 
     return true;
   }
@@ -83,16 +80,15 @@ class NewsRepositoryImpl extends NewsRepository {
       final response = await _newsRemoteDataSource.getNews();
 
       final newsList = response.map((e) => e.toEntity()).toList();
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
       News news = newsList.firstWhere((news)=> news.id == newsId);
-      String? currentUserId = prefs.getString('currentUserId');
-      String? userIdLiked = news.userLikeId.firstWhere((userId)=> userId == currentUserId,orElse: () => '');
+
+      String? userIdLiked = news.userLikeId.firstWhere((userId)=> userId == news.id,orElse: () => '');
       if(userIdLiked != ''){
         news.userLikeId.remove(userIdLiked);
         return false;
       }
       else{
-        news.userLikeId.add(currentUserId ?? '');
+        news.userLikeId.add(news.id ?? '');
         return true;
       }
     }
@@ -109,8 +105,8 @@ class NewsRepositoryImpl extends NewsRepository {
       final newsList = response.map((e) => e.toEntity()).toList();
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       News news = newsList.firstWhere((news)=> news.id == newsId);
-      String? currentUserId = prefs.getString('currentUserId');
-      return news.userLikeId.any((id)=> id == currentUserId);
+      /*String? currentUserId = prefs.getString('currentUserId');*/
+      return news.userLikeId.any((id)=> id == news.id);
     }
     catch(e){
       throw BusinessErrorEntityData(name: 'lỗi khi check like', message: 'lỗi khi check like');

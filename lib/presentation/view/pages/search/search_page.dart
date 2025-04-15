@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/resources/colors.dart';
 import 'package:flutter_clean_architecture/shared/extension/context.dart';
+import 'package:flutter_clean_architecture/shared/utils/logger.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../base/base_page.dart';
 import '../../../base/page_status.dart';
@@ -30,125 +32,134 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
     final colorSchema = context.themeOwn().colorSchema;
     final iconColor =Theme.of(context).iconTheme.color;
     final List<String> categories = ['News', 'Topics', 'Author'];
-    return DefaultTabController(
-      length: categories.length,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 47),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 48,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  child: TextField(
-                    onChanged: (value) {
-                      context.read<SearchBloc>().add(SearchEvent.queryChanged(value));
-                    },
-                    decoration: InputDecoration(
-                      fillColor: AppColors.white,
-                      hintText: LocaleKeys.home_home_search_hint
-                          .tr(),
-                      hintStyle: TextStyle(color: Colors.grey[500]),
-                        prefixIcon: Assets.icons.search.svg(
-                          fit: BoxFit.scaleDown,
-                          color: Theme.of(context).iconTheme.color,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return  AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light, // iOS
+      ),
+      child: DefaultTabController(
+        length: categories.length,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 47),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 48,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    child: TextField(
+                      onChanged: (value) {
+                        context.read<SearchBloc>().add(SearchEvent.queryChanged(value));
+                      },
+                      decoration: InputDecoration(
+                        fillColor: AppColors.white,
+                        hintText: LocaleKeys.home_home_search_hint
+                            .tr(),
+                        hintStyle: TextStyle(color: Colors.grey[500]),
+                          prefixIcon: Assets.icons.search.svg(
+                            fit: BoxFit.scaleDown,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.clear, color: iconColor),
+                          onPressed: () {context.pop();},
                         ),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.clear, color: iconColor),
-                        onPressed: () {context.pop();},
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(color: Colors.grey.shade400),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide(color: Colors.grey.shade400),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TabBar(
-                indicatorColor: AppColors.primaryDefault,
-                indicatorWeight: 4.0,
-                labelColor: colorSchema?.darkTab,
-                labelStyle: textTheme?.textMedium,
-                unselectedLabelStyle: textTheme
-                    ?.textMedium
-                    ?.copyWith(
-                  color:
-                  colorSchema
-                      ?.grayscaleBodyText,
+                const SizedBox(height: 16),
+                TabBar(
+                  indicatorColor: AppColors.primaryDefault,
+                  indicatorWeight: 4.0,
+                  labelColor: colorSchema?.darkTab,
+                  labelStyle: textTheme?.textMedium,
+                  unselectedLabelStyle: textTheme
+                      ?.textMedium
+                      ?.copyWith(
+                    color:
+                    colorSchema
+                        ?.grayscaleBodyText,
+                  ),
+                  unselectedLabelColor: colorSchema?.grayscaleBodyText,
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  indicatorPadding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 0.0,
+                  ),
+                  isScrollable: true,
+                  tabs:
+                      categories.map((category) => Tab(text: category)).toList(),
                 ),
-                labelPadding: const EdgeInsets.symmetric(horizontal: 12.0),
-                indicatorPadding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 0.0,
+                SizedBox(height: 16,),
+                Expanded(
+                  child: BlocBuilder<SearchBloc, SearchState>(
+                    builder: (context, state) {
+                      if (state.pageStatus != PageStatus.Loaded) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      return TabBarView(
+                        children: [
+                          // News
+                          ListView.builder(
+                            itemCount: state.listNews?.length,
+                            itemBuilder: (context, index) {
+                              final news = state.listNews?[index];
+                              return _buildItem(
+                                news?.category??'',
+                                news?.title??'',
+                                news?.source??'',
+                                news?.time??'',
+                                news?.imageUrl??'',
+                                news?.srcImage??'',
+                                context,
+                              );
+                            },
+                          ),
+
+                          // Topics
+                          ListView.builder(
+                            itemCount: state.listTopics?.length,
+                            itemBuilder: (context, index) {
+                              final topic = state.listTopics?[index];
+                              return _buildItemTopic(
+                                topic?.id ?? '',
+                                topic?.imageUrl ?? '',
+                                topic?.name ?? '',
+                                topic?.context?? '',
+                                context,
+                              );
+                            },
+                          ),
+
+                          // Author
+                          ListView.builder(
+                            itemCount: state.listUsers?.length,
+                            itemBuilder: (context, index) {
+                              final author = state.listUsers?[index];
+                              return _buildItemAuthor(
+                                author?.imageUrl ?? '',
+                                author?.username ?? '',
+                                '1.2M Followers',
+                                context,
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
-                isScrollable: true,
-                tabs:
-                    categories.map((category) => Tab(text: category)).toList(),
-              ),
-              SizedBox(height: 16,),
-              Expanded(
-                child: BlocBuilder<SearchBloc, SearchState>(
-                  builder: (context, state) {
-                    if (state.pageStatus != PageStatus.Loaded) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    return TabBarView(
-                      children: [
-                        // News
-                        ListView.builder(
-                          itemCount: state.listNews?.length,
-                          itemBuilder: (context, index) {
-                            final news = state.listNews?[index];
-                            return _buildItem(
-                              news!.category??'',
-                              news.title??'',
-                              news.source??'',
-                              news.time??'',
-                              news.imageUrl??'',
-                              news.srcImage??'',
-                              context,
-                            );
-                          },
-                        ),
 
-                        // Topics
-                        ListView.builder(
-                          itemCount: state.listTopics?.length,
-                          itemBuilder: (context, index) {
-                            final topic = state.listTopics?[index];
-                            return _buildItemTopic(
-                              topic!.id,
-                              topic!.imageUrl,
-                              topic.name,
-                              topic.context,
-                              context,
-                            );
-                          },
-                        ),
-
-                        // Author
-                        ListView.builder(
-                          itemCount: state.listUsers?.length,
-                          itemBuilder: (context, index) {
-                            final author = state.listUsers?[index];
-                            return _buildItemAuthor(
-                              author!.imageUrl ?? '',
-                              author!.username ?? '',
-                              '1.2M Followers',
-                              context,
-                            );
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -271,7 +282,9 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
     final textTheme = context.themeOwn().textTheme;
     final colorSchema = context.themeOwn().colorSchema;
     final topic = context.read<SearchBloc>().state.listTopics?.firstWhere((t) => t.id == index);
+    logger.d(topic);
     final isSaved = topic?.save ?? false;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
@@ -317,7 +330,7 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                 context.read<SearchBloc>().add(SearchEvent.changeSaveTopic(index));
               },
               style: TextButton.styleFrom(
-                backgroundColor: isSaved ? AppColors.blueRibbon : AppColors.white,
+                backgroundColor: isSaved ? AppColors.blueRibbon : colorSchema?.white,
                 fixedSize: Size(78, 34),
                 foregroundColor: AppColors.blueRibbon,
                 side: BorderSide(color: AppColors.blueRibbon),
@@ -358,8 +371,8 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
     return Row(
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
-          child: Image.asset(image, width: 70, height: 70),
+          padding: EdgeInsets.fromLTRB(8, 16, 0, 8),
+          child: Image.network(image, width: 70, height: 70,fit: BoxFit.fill,),
         ),
         Padding(
           padding: EdgeInsetsDirectional.fromSTEB(4, 18.5, 0, 18.5),
@@ -386,7 +399,7 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
               context.read<SearchBloc>().add(SearchEvent.changeFollowUser(title));
             },
             style: TextButton.styleFrom(
-              backgroundColor: isFollowed ? AppColors.blueRibbon : AppColors.white,
+              backgroundColor: isFollowed ? AppColors.blueRibbon : colorSchema?.white,
               fixedSize: Size(78, 34),
               foregroundColor: isFollowed ? AppColors.white : AppColors.blueRibbon,
               side: BorderSide(color: AppColors.blueRibbon),

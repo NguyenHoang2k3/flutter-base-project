@@ -47,11 +47,11 @@ class DetailNewsBloc extends BaseBloc<DetailNewsEvent, DetailNewsState> {
                   state.newsDetail?.id ?? '',
                 ),
               );
-              emit(state.copyWith(likeState: userLike));
+              emit(state.copyWith(likeState: !state.likeState));
             case _ChangeSave():
               emit(state.copyWith(saveState: !state.saveState));
             case _ChangeFollow(: final userName):
-              await _changeFollowUserUseCase.call(
+              final result = await _changeFollowUserUseCase.call(
                 params: ChangeFollowParam(userName),
               );
               emit(state.copyWith(followState: !state.followState));

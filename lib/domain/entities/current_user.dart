@@ -8,7 +8,7 @@ class CurrentUser {
      this.id,
     this.fullName,
     this.imagePath,
-     this.username,
+      this.username,
      this.email,
      this.phoneNumber,
     this.bio,

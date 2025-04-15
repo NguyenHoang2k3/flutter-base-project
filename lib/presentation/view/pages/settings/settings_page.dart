@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/router/router.dart';
 import 'package:flutter_clean_architecture/presentation/view/widgets/app_switch.dart';
 import 'package:flutter_clean_architecture/shared/extension/context.dart';
 import 'package:gap/gap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../base/base_page.dart';
 import '../../../theme/theme_bloc.dart';
@@ -21,128 +23,142 @@ class SettingsPage
     context.read<SettingsBloc>().add(const SettingsEvent.loadData());
     super.onInitState(context);
   }
+  Future<void> removeUserFromPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('currentUser');
+  }
+
 
   @override
   Widget builder(BuildContext context) {
     final textTheme = context.themeOwn().textTheme;
     final colorSchema = context.themeOwn().colorSchema;
     final iconColor =Theme.of(context).iconTheme.color;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          shadowColor: Colors.transparent,
-          leading: IconButton(
-            padding: EdgeInsets.only(left: 16),
-            onPressed: context.pop,
-            icon: Assets.icons.backIcon.svg(color: iconColor),
-          ),
-          title: Text(
-            "Settings",
-            style: textTheme?.textMedium?.copyWith(
-              color: colorSchema?.darkBlack,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return  AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light, // iOS
+      ),
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            shadowColor: Colors.transparent,
+            leading: IconButton(
+              padding: EdgeInsets.only(left: 16),
+              onPressed: context.pop,
+              icon: Assets.icons.backIcon.svg(color: iconColor),
+            ),
+            title: Text(
+              "Settings",
+              style: textTheme?.textMedium?.copyWith(
+                color: colorSchema?.darkBlack,
+              ),
             ),
           ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Assets.icons.iconNotificationTypeOutline.svg(color: colorSchema?.iconWhite),
-                    Gap(4),
-                    Text(
-                      'Notification',
-                      style: textTheme?.textMedium?.copyWith(
-                        color: colorSchema?.darkBlack,
-                      ),
-                    ),
-                    Spacer(),
-                    Assets.icons.iconRightTypeOutline.svg(color: colorSchema?.iconWhite),
-                  ],
-                ),
-                Gap(48),
-                Row(
-                  children: [
-                    Assets.icons.iconRightTypeOutline.svg(color: colorSchema?.iconWhite),
-                    Gap(4),
-                    Text(
-                      'Security',
-                      style: textTheme?.textMedium?.copyWith(
-                        color: colorSchema?.darkBlack,
-                      ),
-                    ),
-                    Spacer(),
-                    Assets.icons.iconRightTypeOutline.svg(color: colorSchema?.iconWhite),
-                  ],
-                ),
-                Gap(48),
-                Row(
-                  children: [
-                    Assets.icons.iconQuestionTypeOutline.svg(color: colorSchema?.iconWhite),
-                    Gap(4),
-                    Text(
-                      'Help',
-                      style: textTheme?.textMedium?.copyWith(
-                        color: colorSchema?.darkBlack,
-                      ),
-                    ),
-                    Spacer(),
-                    Assets.icons.iconRightTypeOutline.svg(color: colorSchema?.iconWhite),
-                  ],
-                ),
-                Gap(48),
-                Row(
-                  children: [
-                    Assets.icons.iconMoonTypeOutline.svg(color: colorSchema?.iconWhite),
-                    Gap(4),
-                    Text(
-                      'Dark Mode',
-                      style: textTheme?.textMedium?.copyWith(
-                        color: colorSchema?.darkBlack,
-                      ),
-                    ),
-                    Spacer(),
-                    BlocBuilder<SettingsBloc, SettingsState>(
-                      builder: (context, state) {
-                        return SizedBox(
-                          width: 36,
-                          child: AppCupertinoSwitch(
-                            value: state.darkMode,
-                            onChanged: (value) {
-                              context.read<SettingsBloc>().add(const SettingsEvent.changeDarkMode());
-                              context.read<ThemeBloc>().add(ThemeEvent.changeThemeMode(value));
-                            },
-                            activeTrackColor: const Color(0xff667080),
-                            inactiveTrackColor: colorSchema?.grayscaleButtonText,
-                            thumbColor: CupertinoColors.white,
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                Gap(48),
-                InkWell(
-                  onTap: (){
-                    context.router.replaceAll([const LoginRoute()]);
-                  },
-                  child: Row(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Assets.icons.iconLogoutTypeOutline.svg(color: colorSchema?.iconWhite),
+                      Assets.icons.iconNotificationTypeOutline.svg(color: colorSchema?.iconWhite),
                       Gap(4),
                       Text(
-                        'Logout',
+                        'Notification',
                         style: textTheme?.textMedium?.copyWith(
                           color: colorSchema?.darkBlack,
                         ),
                       ),
+                      Spacer(),
+                      Assets.icons.iconRightTypeOutline.svg(color: colorSchema?.iconWhite),
                     ],
                   ),
-                ),
-              ],
+                  Gap(48),
+                  Row(
+                    children: [
+                      Assets.icons.lock.svg(color: colorSchema?.iconWhite),
+                      Gap(4),
+                      Text(
+                        'Security',
+                        style: textTheme?.textMedium?.copyWith(
+                          color: colorSchema?.darkBlack,
+                        ),
+                      ),
+                      Spacer(),
+                      Assets.icons.iconRightTypeOutline.svg(color: colorSchema?.iconWhite),
+                    ],
+                  ),
+                  Gap(48),
+                  Row(
+                    children: [
+                      Assets.icons.iconQuestionTypeOutline.svg(color: colorSchema?.iconWhite),
+                      Gap(4),
+                      Text(
+                        'Help',
+                        style: textTheme?.textMedium?.copyWith(
+                          color: colorSchema?.darkBlack,
+                        ),
+                      ),
+                      Spacer(),
+                      Assets.icons.iconRightTypeOutline.svg(color: colorSchema?.iconWhite),
+                    ],
+                  ),
+                  Gap(48),
+                  Row(
+                    children: [
+                      Assets.icons.iconMoonTypeOutline.svg(color: colorSchema?.iconWhite),
+                      Gap(4),
+                      Text(
+                        'Dark Mode',
+                        style: textTheme?.textMedium?.copyWith(
+                          color: colorSchema?.darkBlack,
+                        ),
+                      ),
+                      Spacer(),
+                      BlocBuilder<SettingsBloc, SettingsState>(
+                        builder: (context, state) {
+                          return SizedBox(
+                            width: 36,
+                            child: AppCupertinoSwitch(
+                              value: state.darkMode,
+                              onChanged: (value) {
+                                context.read<SettingsBloc>().add(const SettingsEvent.changeDarkMode());
+                                context.read<ThemeBloc>().add(ThemeEvent.changeThemeMode(value));
+                              },
+                              activeTrackColor: const Color(0xff667080),
+                              inactiveTrackColor: colorSchema?.grayscaleButtonText,
+                              thumbColor: CupertinoColors.white,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  Gap(48),
+                  InkWell(
+                    onTap: (){
+                      removeUserFromPreferences();
+                      context.router.push( LoginRoute());
+                    },
+                    child: Row(
+                      children: [
+                        Assets.icons.iconLogoutTypeOutline.svg(color: colorSchema?.iconWhite),
+                        Gap(4),
+                        Text(
+                          'Logout',
+                          style: textTheme?.textMedium?.copyWith(
+                            color: colorSchema?.darkBlack,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

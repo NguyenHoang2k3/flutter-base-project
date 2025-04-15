@@ -40,7 +40,7 @@ class TopicRepositoryRepositoryImpl extends TopicRepositoryRepository {
         imageUrl: "assets/images/health.png",
         name: "Technology",
         context: "Discover the newest innovations and tech trends shaping the world.",
-        save: true
+        save: false
     ),
     Topics(
         id: "3",
@@ -61,14 +61,14 @@ class TopicRepositoryRepositoryImpl extends TopicRepositoryRepository {
         imageUrl: "assets/images/health.png",
         name: "Education",
         context: "Read about new learning methods, policies, and global education news.",
-        save: true
+        save: false
     ),
     Topics(
         id: "6",
         imageUrl: "assets/images/health.png",
         name: "Finance",
         context: "Track market trends, financial tips, and economic updates.",
-        save: true
+        save: false
     ),
     Topics(
         id: "7",
@@ -89,7 +89,7 @@ class TopicRepositoryRepositoryImpl extends TopicRepositoryRepository {
         imageUrl: "assets/images/health.png",
         name: "Culture",
         context: "Dive into art, literature, and traditions around the globe.",
-        save: true
+        save: false
     ),
     Topics(
         id: "10",

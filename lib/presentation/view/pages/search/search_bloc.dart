@@ -72,27 +72,17 @@ class SearchBloc extends BaseBloc<SearchEvent, SearchState> {
               emit(state.copyWith(listUsers: await filteredAuthors));
               break;
             case _ChangeSaveTopic(:final index):
-              final updatedTopics = state.listTopics?.map((topic) {
-                if (topic.id == index) {
-                  final updatedTopic = topic.copyWith(save: !topic.save);
-                  _saveTopicState(updatedTopic);
-                  return updatedTopic;
-                }
-                return topic;
-              }).toList();
-              emit(state.copyWith(listTopics: updatedTopics));
+              await _changeSaveTopicUseCase.call(params: ChangeSaveTopicParam(index));
+              emit(
+                state.copyWith(saveTopic: !state.saveTopic),
+              );
               break;
 
             case _ChangeFollowUser(:final userName):
-              final updatedUsers = state.listUsers?.map((user) {
-                if (user.username == userName) {
-                  final updatedUser = user.copyWith(isFollow: !user.isFollow);
-                  _saveUserFollowState(updatedUser);
-                  return updatedUser;
-                }
-                return user;
-              }).toList();
-              emit(state.copyWith(listUsers: updatedUsers));
+              //await _changeFollowUseCase.call(params: ChangeFollowParam(userName));
+              emit(
+                state.copyWith(isFollow: !state.isFollow),
+              );
               break;
           }
         } catch(e,s) {

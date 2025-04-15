@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/view/pages/comment/comment_bloc.dart';
 import 'package:flutter_clean_architecture/shared/extension/context.dart';
 import 'package:gap/gap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../../domain/entities/current_user.dart';
 import '../../../../../domain/entities/news_comment.dart';
 import '../../../../../gen/assets.gen.dart';
 
@@ -27,10 +31,28 @@ class Comment extends StatefulWidget {
 
   @override
   State<Comment> createState() => _CommentState();
+
 }
 
 class _CommentState extends State<Comment> {
   bool showReply = false;
+  CurrentUser? currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('currentUser');
+    if (userJson != null) {
+      setState(() {
+        currentUser = CurrentUser.fromJson(jsonDecode(userJson));
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +73,9 @@ class _CommentState extends State<Comment> {
                 width: 40,
                 height: 40,
                 child: ClipOval(
-                  child: Image.asset(
+                  child: Image.network(
                     fit: BoxFit.cover,
-                    "assets/images/bbc.png"
+                      currentUser?.imagePath ??''
                     //widget.newsComment.userComment.imageUrl??'',
                   ),
                 ),
@@ -67,7 +89,7 @@ class _CommentState extends State<Comment> {
                       softWrap: true,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      widget.newsComment.userComment.username??'',
+                      currentUser?.username??'',
                       style: textTheme?.textMediumLink?.copyWith(
                         color: colorSchema?.darkBlack,
                       ),
@@ -154,7 +176,7 @@ class _CommentState extends State<Comment> {
                           },
                           child: Row(
                             children: [
-                              Assets.icons.iconsReplyMini.svg(color: iconColor),
+                              Assets.icons.reppy.svg(),
                               const Gap(3),
                               Text(
                                 softWrap: true,

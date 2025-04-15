@@ -44,4 +44,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: EditProfileRoute.page),
     AutoRoute(page: SettingsRoute.page),
   ];
+
+  @override
+  List<NavigatorObserver> navigatorObservers() => [AutoRouteObserver()];
 }
