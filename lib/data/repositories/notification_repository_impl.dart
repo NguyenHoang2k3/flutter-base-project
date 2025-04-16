@@ -50,7 +50,7 @@ class NotificationRepositoryImpl extends NotificationRepository {
       "assets/images/cnet.png",
       Users("12", 'CNET', '', '', '', 0, true),
       "is now following you",
-      DateTime(2025, 4, 14, 23, 50),
+      DateTime(2025, 4, 13, 23, 50),
       "follow", // Corrected hour
     ),
     Notification(

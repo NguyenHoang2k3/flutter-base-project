@@ -8,7 +8,6 @@ import 'package:flutter_clean_architecture/shared/extension/context.dart';
 import 'package:flutter_clean_architecture/shared/utils/logger.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../base/base_page.dart';
-import '../../../base/page_status.dart';
 import '../../../resources/locale_keys.dart';
 import 'search_bloc.dart';
 
@@ -16,7 +15,6 @@ import 'search_bloc.dart';
 @RoutePage()
 class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
   const SearchPage({Key? key}) : super(key: key);
-
 
   @override
   void onInitState(BuildContext context) {
@@ -33,6 +31,7 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
     final iconColor =Theme.of(context).iconTheme.color;
     final List<String> categories = ['News', 'Topics', 'Author'];
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    bool isLoad = false;
     return  AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -51,7 +50,7 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 0),
                     child: TextField(
-                      onChanged: (value) {
+                      onSubmitted: (value) {
                         context.read<SearchBloc>().add(SearchEvent.queryChanged(value));
                       },
                       decoration: InputDecoration(
@@ -102,59 +101,60 @@ class SearchPage extends BasePage<SearchBloc, SearchEvent, SearchState> {
                 Expanded(
                   child: BlocBuilder<SearchBloc, SearchState>(
                     builder: (context, state) {
-                      if (state.pageStatus != PageStatus.Loaded) {
-                        return const Center(child: CircularProgressIndicator());
+                      if (state.isload) {
+                        return Center(child: CircularProgressIndicator());
                       }
-                      return TabBarView(
-                        children: [
-                          // News
-                          ListView.builder(
-                            itemCount: state.listNews?.length,
-                            itemBuilder: (context, index) {
-                              final news = state.listNews?[index];
-                              return _buildItem(
-                                news?.category??'',
-                                news?.title??'',
-                                news?.source??'',
-                                news?.time??'',
-                                news?.imageUrl??'',
-                                news?.srcImage??'',
-                                context,
-                              );
-                            },
-                          ),
+                        return TabBarView(
+                          children: [
+                            // News
+                            ListView.builder(
+                              itemCount: state.listNews?.length,
+                              itemBuilder: (context, index) {
 
-                          // Topics
-                          ListView.builder(
-                            itemCount: state.listTopics?.length,
-                            itemBuilder: (context, index) {
-                              final topic = state.listTopics?[index];
-                              return _buildItemTopic(
-                                topic?.id ?? '',
-                                topic?.imageUrl ?? '',
-                                topic?.name ?? '',
-                                topic?.context?? '',
-                                context,
-                              );
-                            },
-                          ),
+                                final news = state.listNews?[index];
+                                return _buildItem(
+                                  news?.category ?? '',
+                                  news?.title ?? '',
+                                  news?.source ?? '',
+                                  news?.time ?? '',
+                                  news?.imageUrl ?? '',
+                                  news?.srcImage ?? '',
+                                  context,
+                                );
+                              },
+                            ),
 
-                          // Author
-                          ListView.builder(
-                            itemCount: state.listUsers?.length,
-                            itemBuilder: (context, index) {
-                              final author = state.listUsers?[index];
-                              return _buildItemAuthor(
-                                author?.imageUrl ?? '',
-                                author?.username ?? '',
-                                '1.2M Followers',
-                                context,
-                              );
-                            },
-                          ),
-                        ],
-                      );
-                    },
+                            // Topics
+                            ListView.builder(
+                              itemCount: state.listTopics?.length,
+                              itemBuilder: (context, index) {
+                                final topic = state.listTopics?[index];
+                                return _buildItemTopic(
+                                  topic?.id ?? '',
+                                  topic?.imageUrl ?? '',
+                                  topic?.name ?? '',
+                                  topic?.context ?? '',
+                                  context,
+                                );
+                              },
+                            ),
+
+                            // Author
+                            ListView.builder(
+                              itemCount: state.listUsers?.length,
+                              itemBuilder: (context, index) {
+                                final author = state.listUsers?[index];
+                                return _buildItemAuthor(
+                                  author?.imageUrl ?? '',
+                                  author?.username ?? '',
+                                  '1.2M Followers',
+                                  context,
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      }
                   ),
                 ),
 

@@ -11,6 +11,7 @@ class SearchState extends BaseState with _$SearchState {
     this.listUsers,
     this.isFollow = false,
     this.saveTopic = false,
+    this.isload = true,
   });
 
   @override
@@ -27,4 +28,6 @@ class SearchState extends BaseState with _$SearchState {
   final bool isFollow;
   @override
   final bool saveTopic;
+  @override
+  final bool isload;
 }

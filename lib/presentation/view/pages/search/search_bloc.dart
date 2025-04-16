@@ -28,23 +28,23 @@ class SearchBloc extends BaseBloc<SearchEvent, SearchState> {
         try {
           switch(event) {
             case _LoadData():
-              emit(state.copyWith(pageStatus: PageStatus.Uninitialized));
-
+              emit(state.copyWith(pageStatus: PageStatus.Loaded, isload: true));
               try {
                 final news = await _getNewsListUseCase.call(
                   params: GetNewsListParam(),
                 );
+
                 final topics = await _getTopicsListUseCase.call(
                   params: GetTopicsListUseCaseParam(''),
                 );
+
                 final authors = await _getAuthorsListUseCase.call(
                   params: GetAuthorsListUseCaseParam(query: ''),
                 );
                 emit(state.copyWith(
-                  pageStatus: PageStatus.Loaded,
                   listNews: news,
                   listTopics: topics,
-                  listUsers: authors,
+                  listUsers: authors, isload: false
                 ));
               } catch (e, s) {
                 handleError(emit, ErrorConverter.convert(e, s));

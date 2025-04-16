@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_clean_architecture/domain/entities/current_user.dart';
 import 'package:flutter_clean_architecture/shared/extension/context.dart';
 import 'package:flutter_clean_architecture/shared/extension/theme_data.dart';
+import 'package:flutter_clean_architecture/shared/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -20,6 +21,16 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>  with AutoRouteAwareStateMixin<ProfilePage> {
   late Future<CurrentUser?> _userFuture;
+  Future<CurrentUser?> getUserFromPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('currentUser');
+
+    if (userJson == null) return null;
+
+    final Map<String, dynamic> userMap = jsonDecode(userJson);
+    return CurrentUser.fromJson(userMap);
+  }
+
 
   @override
   void initState() {
@@ -46,6 +57,9 @@ class _ProfilePageState extends State<ProfilePage>  with AutoRouteAwareStateMixi
 
   @override
   Widget build(BuildContext context) {
+    final user = getUserFromPreferences();
+    logger.d(user);
+
     final textTheme = context.themeOwn().textTheme;
     final colorSchema = context.themeOwn().colorSchema;
     final iconColor =Theme.of(context).iconTheme.color;
@@ -299,6 +313,8 @@ class _ProfilePageState extends State<ProfilePage>  with AutoRouteAwareStateMixi
             // TODO: Add FAB logic
           },
           child: const Icon(Icons.add),
+          foregroundColor: Colors.white,
+          splashColor: Colors.white,
           focusColor: Colors.white,
           backgroundColor: Colors.blue,
         ),
@@ -315,7 +331,7 @@ class _ProfileStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
+    return Expanded(
       child: Column(
         children: [
           Text(
@@ -325,9 +341,10 @@ class _ProfileStat extends StatelessWidget {
               color:
               context.themeOwn().colorSchema?.darkBlack,
             ),
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          Text(label, style: Theme.of(context).own()?.textTheme?.textMedium),
+          Text(label, style: Theme.of(context).own()?.textTheme?.textMedium, overflow: TextOverflow.ellipsis,),
         ],
       ),
     );

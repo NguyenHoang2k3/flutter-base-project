@@ -65,7 +65,7 @@ class LoginBloc extends BaseBloc<LoginEvent, LoginState> {
                 user.username ?? '',
                 user.email ?? '',
                 '',
-                null,
+                'User Nam Loise Uiusa asdahs ashduasnh sgahsg',
                 null,
               );
 
